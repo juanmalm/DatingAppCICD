@@ -1,8 +1,3 @@
-# Node.js with Angular
-# Build a Node.js project that uses Angular.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
 trigger:
 - main
 
@@ -12,12 +7,12 @@ pool:
 stages:
 - stage: Compilacion
   jobs:
-  - job: Cliente_Angular
+  - job: Cliente
     steps:
     - task: NodeTool@0
       inputs:
         versionSpec: '16.x'
-      displayName: 'Install Node.js'
+      displayName: 'Instalar Node.js'
 
     - script: |
         pwd
@@ -26,3 +21,10 @@ stages:
         npm install --legacy-peer-deps
         ng build
       displayName: 'npm install and build'
+
+  - job: API
+    steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        projects: 'API/API.csproj'
+      displayName: 'dotnet build'
