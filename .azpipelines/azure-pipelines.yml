@@ -20,5 +20,5 @@ steps:
     cd client
     npm install -g @angular/cli
     npm install --legacy-peer-deps
-    ng build --prod
+    ng build
   displayName: 'npm install and build'
