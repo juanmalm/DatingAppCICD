@@ -12,7 +12,7 @@ pool:
 stages:
 - stage: Compilacion
   jobs:
-  - job: Cliente Angular
+  - job: Cliente_Angular
     steps:
     - task: NodeTool@0
       inputs:
