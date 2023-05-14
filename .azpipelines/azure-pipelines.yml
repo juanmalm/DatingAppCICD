@@ -9,16 +9,20 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '16.x'
-  displayName: 'Install Node.js'
+stages:
+- stage: Compilación
+  jobs:
+  - job: Cliente Angular
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '16.x'
+      displayName: 'Install Node.js'
 
-- script: |
-    pwd
-    cd client
-    npm install -g @angular/cli
-    npm install --legacy-peer-deps
-    ng build
-  displayName: 'npm install and build'
+    - script: |
+        pwd
+        cd client
+        npm install -g @angular/cli
+        npm install --legacy-peer-deps
+        ng build
+      displayName: 'npm install and build'
