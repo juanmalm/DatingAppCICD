@@ -7,7 +7,7 @@ pool:
 stages:
 - stage: Compilacion
   jobs:
-  - job: 'Cliente Angular'
+  - job: Cliente_Angular
     steps:
     - task: NodeTool@0
       inputs:
@@ -22,16 +22,16 @@ stages:
         ng build
       displayName: 'npm install and build'
 
-  - job: 'API .NET'
+  - job: API_NET
     steps:
     - task: DotNetCoreCLI@2
       inputs:
         projects: 'API/API.csproj'
       displayName: 'dotnet build'
 
-- stage: 'Test unitarios'
+- stage: Test_Unitarios
   jobs:
-  - job: 'API .NET'
+  - job: API_NET
     steps:
     - task: DotNetCoreCLI@2
       inputs:
