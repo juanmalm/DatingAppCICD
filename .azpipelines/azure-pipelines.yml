@@ -36,5 +36,5 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'test'
-        projects: 'API/API.UnitTests.csproj'
+        projects: 'API.UnitTests/API.UnitTests.csproj'
       displayName: 'dotnet test'
