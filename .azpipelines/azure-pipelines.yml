@@ -15,7 +15,6 @@ stages:
       displayName: 'Instalar Node.js'
 
     - script: |
-        pwd
         cd client
         npm install -g @angular/cli
         npm install --legacy-peer-deps
@@ -31,6 +30,13 @@ stages:
 
 - stage: Test_Unitarios
   jobs:
+  - job: Cliente_Angular
+    steps:
+    - script: |
+        cd client
+        ng test --no-watch --no-progress
+      displayName: 'ng test'
+
   - job: API_NET
     steps:
     - task: DotNetCoreCLI@2
