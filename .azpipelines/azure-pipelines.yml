@@ -23,6 +23,12 @@ stages:
 
   - job: API_NET
     steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '7.0.100'
+      displayName: '.NET | Select SDK version'
+
     - task: DotNetCoreCLI@2
       inputs:
         projects: 'API/API.csproj'
@@ -41,6 +47,12 @@ stages:
 
   - job: API_NET
     steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '7.0.100'
+      displayName: '.NET | Select SDK version'
+
     - task: DotNetCoreCLI@2
       inputs:
         command: 'test'
