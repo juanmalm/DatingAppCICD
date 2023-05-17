@@ -18,9 +18,9 @@ stages:
         cd client
         call npm install -g @angular/cli
         call npm install --legacy-peer-deps
-        ng build
+        call ng build
         echo running tests
-        ng test --no-watch --reporters=junit
+        call ng test --no-watch --reporters=junit
         dir
         cd ..
         cd API
