@@ -18,6 +18,7 @@ stages:
         call npm install -g @angular/cli
         call npm install --legacy-peer-deps
         call ng build
+      workingDirectory: $(Build.SourcesDirectory)/client
       displayName: 'npm install and build'
 
   - job: API_NET
@@ -47,6 +48,7 @@ stages:
         call npm install -g @angular/cli
         call npm install --legacy-peer-deps
         call ng test --no-watch --reporters=junit
+      workingDirectory: $(Build.SourcesDirectory)/client
       displayName: 'ng test'
 
     - task: PublishTestResults@2
