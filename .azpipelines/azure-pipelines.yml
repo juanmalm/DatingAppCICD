@@ -18,12 +18,6 @@ stages:
         call npm install -g @angular/cli
         call npm install --legacy-peer-deps
         call ng build
-        echo running tests
-        call ng test --no-watch --reporters=junit
-        dir
-        cd ..
-        cd API
-        dir
       workingDirectory: $(Build.SourcesDirectory)/client
       displayName: 'npm install and build'
 
@@ -49,11 +43,17 @@ stages:
   jobs:
   - job: Cliente_Angular
     steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '16.x'
+      displayName: 'Instalar Node.js'
+
     - script: |
         call npm install -g @angular/cli
         call npm install --legacy-peer-deps
-        call ng build
+        echo running tests
         call ng test --no-watch --reporters=junit
+        dir
       workingDirectory: $(Build.SourcesDirectory)/client
       displayName: 'ng test'
 
