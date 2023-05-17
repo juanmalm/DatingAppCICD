@@ -17,11 +17,13 @@ stages:
     - task: CmdLine@2
       inputs:
         script: |
+          echo  '$(System.DefaultWorkingDirectory)'
           cd client
           npm install -g @angular/cli
           npm install --legacy-peer-deps
           ng build
           ng test --no-watch --reporters=junit
+          echo  '$(System.DefaultWorkingDirectory)'
           dir
       displayName: 'npm install and build'
 
