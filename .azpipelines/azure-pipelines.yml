@@ -37,8 +37,8 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFiles: '$(Build.SourcesDirectory)/client/test-results.xml'
+        failTaskOnFailedTests: true
       displayName: '[Test unitarios 2/2]: Publicación de resultados'
-      failTaskOnFailedTests: true
 
   # Job para el API en .NET
   - job: API_NET
