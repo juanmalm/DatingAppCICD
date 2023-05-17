@@ -7,8 +7,10 @@ pool:
 stages:
 
 # Etapa de commit. Incluye los procesos de compilación, test unitarios, evaluación del código y empaquetado
-- stage: Fase_Commit
+- stage: Etapa_Commit
   jobs:
+
+  # Job para el cliente en Angular
   - job: Cliente_Angular
     steps:
 
@@ -28,6 +30,7 @@ stages:
     # Test unitarios
     - script: |
         call ng test --no-watch --reporters=junit
+        dir
       workingDirectory: $(Build.SourcesDirectory)/client
       displayName: '[Test unitarios 1/2]: Ejecución de los test'
 
@@ -35,7 +38,9 @@ stages:
       inputs:
         testResultsFiles: '$(Build.SourcesDirectory)/client/test-results.xml'
       displayName: '[Test unitarios 2/2]: Publicación de resultados'
+      failTaskOnFailedTests: true
 
+  # Job para el API en .NET
   - job: API_NET
     steps:
 
