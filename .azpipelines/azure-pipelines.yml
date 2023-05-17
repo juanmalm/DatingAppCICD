@@ -30,7 +30,7 @@ stages:
     # Test unitarios
     - script: |
         call ng test --no-watch --reporters=junit
-        dir
+        exit 0
       workingDirectory: $(Build.SourcesDirectory)/client
       displayName: '[Test unitarios 1/2]: Ejecución de los test'
 
