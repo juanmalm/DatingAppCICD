@@ -19,10 +19,13 @@ stages:
         npm install -g @angular/cli
         npm install --legacy-peer-deps
         ng build
-        cd ..
-        cd API
-        dir
+        ng test --no-watch --reporters=junit
       displayName: 'npm install and build'
+
+    - task: PublishTestResults@2
+      displayName: 'Publish Test Results'
+      inputs:
+        testResultsFiles: '$(Build.SourcesDirectory)/client/test-results.xml'
 
   - job: API_NET
     steps:
