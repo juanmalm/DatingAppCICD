@@ -14,16 +14,17 @@ stages:
         versionSpec: '16.x'
       displayName: 'Instalar Node.js'
 
-    - script: dir
-      workingDirectory: $(Agent.BuildDirectory)
-      displayName: List contents of a folder
-
     - script: |
         cd client
         call npm install -g @angular/cli
         call npm install --legacy-peer-deps
         ng build
+        echo running tests
         ng test --no-watch --reporters=junit
+        dir
+        cd ..
+        cd API
+        dir
       displayName: 'npm install and build'
 
     - task: PublishTestResults@2
