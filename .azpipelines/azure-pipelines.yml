@@ -48,6 +48,7 @@ stages:
         cd client
         npm install -g @angular/cli
         npm install --legacy-peer-deps
+        ng build
         ng test --no-watch --reporters=junit
       displayName: 'ng test'
 
