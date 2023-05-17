@@ -19,6 +19,9 @@ stages:
         npm install -g @angular/cli
         npm install --legacy-peer-deps
         ng build
+        cd ..
+        cd API
+        dir
       displayName: 'npm install and build'
 
   - job: API_NET
