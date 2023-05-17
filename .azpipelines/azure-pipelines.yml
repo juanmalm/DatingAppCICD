@@ -15,22 +15,10 @@ stages:
       displayName: 'Instalar Node.js'
 
     - script: |
-        cd client
         call npm install -g @angular/cli
         call npm install --legacy-peer-deps
         call ng build
-        echo running tests
-        call ng test --no-watch --reporters=junit
-        dir
-        cd ..
-        cd API
-        dir
       displayName: 'npm install and build'
-
-    - task: PublishTestResults@2
-      displayName: 'Publish Test Results'
-      inputs:
-        testResultsFiles: '$(Build.SourcesDirectory)/client/test-results.xml'
 
   - job: API_NET
     steps:
@@ -56,11 +44,9 @@ stages:
       displayName: '.NET | Select SDK version'
 
     - script: |
-        cd client
-        npm install -g @angular/cli
-        npm install --legacy-peer-deps
-        ng build
-        ng test --no-watch --reporters=junit
+        call npm install -g @angular/cli
+        call npm install --legacy-peer-deps
+        call ng test --no-watch --reporters=junit
       displayName: 'ng test'
 
     - task: PublishTestResults@2
