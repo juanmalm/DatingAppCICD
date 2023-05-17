@@ -38,6 +38,12 @@ stages:
   jobs:
   - job: Cliente_Angular
     steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '7.0.100'
+      displayName: '.NET | Select SDK version'
+
     - script: |
         cd client
         npm install -g @angular/cli
