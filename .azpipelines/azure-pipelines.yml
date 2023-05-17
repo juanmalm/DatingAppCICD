@@ -9,11 +9,6 @@ stages:
   jobs:
   - job: Cliente_Angular
     steps:
-    - task: NodeTool@0
-      inputs:
-        versionSpec: '16.x'
-      displayName: 'Instalar Node.js'
-
     - script: |
         call npm install -g @angular/cli
         call npm install --legacy-peer-deps
