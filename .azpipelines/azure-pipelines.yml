@@ -45,6 +45,11 @@ stages:
         ng test --no-watch --no-progress
       displayName: 'ng test'
 
+    - task: PublishTestResults@2
+      displayName: 'Publish Test Results'
+      inputs:
+        testResultsFiles: '$(Build.SourcesDirectory)/client/test-results.xml'
+
   - job: API_NET
     steps:
     - task: UseDotNet@2
