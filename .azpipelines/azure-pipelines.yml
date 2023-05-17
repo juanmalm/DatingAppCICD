@@ -42,7 +42,7 @@ stages:
         cd client
         npm install -g @angular/cli
         npm install --legacy-peer-deps
-        ng test --no-watch --no-progress
+        ng test --no-watch --no-progress --reporters=junit
       displayName: 'ng test'
 
     - task: PublishTestResults@2
