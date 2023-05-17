@@ -13,8 +13,14 @@ stages:
         call npm install -g @angular/cli
         call npm install --legacy-peer-deps
         call ng build
+        call ng test --no-watch --reporters=junit
       workingDirectory: $(Build.SourcesDirectory)/client
       displayName: 'npm install and build'
+
+    - task: PublishTestResults@2
+      displayName: 'Publish Test Results'
+      inputs:
+        testResultsFiles: '$(Build.SourcesDirectory)/client/test-results.xml'
 
   - job: API_NET
     steps:
@@ -33,12 +39,6 @@ stages:
   jobs:
   - job: Cliente_Angular
     steps:
-    - task: UseDotNet@2
-      inputs:
-        packageType: 'sdk'
-        version: '7.0.100'
-      displayName: '.NET | Select SDK version'
-
     - script: |
         call npm install -g @angular/cli
         call npm install --legacy-peer-deps
