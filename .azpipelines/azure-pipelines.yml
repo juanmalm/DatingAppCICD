@@ -14,12 +14,15 @@ stages:
         versionSpec: '16.x'
       displayName: 'Instalar Node.js'
 
-    - script: |
-        cd client
-        npm install -g @angular/cli
-        npm install --legacy-peer-deps
-        ng build
-        ng test --no-watch --reporters=junit
+    - task: CmdLine@2
+      inputs:
+        script: |
+          cd client
+          npm install -g @angular/cli
+          npm install --legacy-peer-deps
+          ng build
+          ng test --no-watch --reporters=junit
+          dir
       displayName: 'npm install and build'
 
     - task: PublishTestResults@2
