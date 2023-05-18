@@ -44,6 +44,24 @@ stages:
   - job: API_NET
     steps:
 
+    # Evaluación y calidad del código
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          Invoke-WebRequest -Uri https://github.com/github/codeql-action/releases/latest/download/codeql-bundle-win64.tar.gz -OutFile D:\Juanma\Master\DevOps\Asignaturas\TFM\workspace\DatingAppCICD\codeql-bundle-win64.tar.gz
+          tar -xvzf .\codeql-bundle-win64.tar.gz
+          .\codeql\codeql database init --language csharp --trace-process-name Agent.Worker.exe --source-root API --begin-tracing /codeql-dbs/api-repo
+          $json = Get-Content /codeql-dbs/api-repo/temp/tracingEnvironment/start-tracing.json | ConvertFrom-Json
+          $json.PSObject.Properties | ForEach-Object {
+              $template = "##vso[task.setvariable variable="
+              $template += $_.Name
+              $template += "]"
+              $template += $_.Value
+              echo "$template"
+          }
+        displayName: '[Evaluación y calidad del código 1/2]: Inicialización CodeQL'
+
     # Compilación
     - task: UseDotNet@2
       inputs:
@@ -51,24 +69,28 @@ stages:
         version: '7.0.100'
       displayName: '[Compilación 1/2]: Instalar SDK .NET'
 
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "Downloading Code QL analysis for Windows"
-          $ProgressPreference = 'SilentlyContinue'
-          Invoke-WebRequest -uri https://github.com/github/codeql-action/releases/latest/download/codeql-runner-win.exe -OutFile $(Build.SourcesDirectory)\src\codeql-runner-win.exe
-          Write-Host "Code QL analysis for Windows downloaded, now we init it"
-          cd $(Build.SourcesDirectory)\src
-          pwd
-          & ./codeql-runner-win.exe init --github-url https://github.com --repository juanmalm/DatingAppCICD --github-auth $(ghtoken) --languages csharp
-          cat $(Build.SourcesDirectory)\src\codeql-runner\codeql-env.sh | Invoke-Expression
-        displayName: '[Evaluación y calidad del código 1/2]: Inicialización CodeQL'
-
     - task: DotNetCoreCLI@2
       inputs:
         projects: 'API/API.csproj'
       displayName: '[Compilación 2/2]: Compilación'
+
+    # Evaluación y calidad del código
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          $json = Get-Content $(System.DefaultWorkingDirectory)/db/temp/tracingEnvironment/end-tracing.json | ConvertFrom-Json
+          $json.PSObject.Properties | ForEach-Object {
+              $template = "##vso[task.setvariable variable="
+              $template += $_.Name
+              $template += "]"
+              $template += $_.Value
+              echo "$template"
+          }
+          .\codeql\codeql database finalize /codeql-dbs/api-repo
+          .\codeql\codeql database analyze /codeql-dbs/api-repo csharp-code-scanning.qls --sarif-category=csharp --format=sarif-latest --output=/temp/api-repo-csharp.sarif
+          echo $(ghtoken) | .\codeql\codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=/temp/api-repo-csharp.sarif --github-auth-stdin
+        displayName: '[Evaluación y calidad del código 1/2]: Análisis CodeQL'
 
     # Test unitarios
     - task: DotNetCoreCLI@2
