@@ -51,16 +51,10 @@ stages:
         version: '7.0.100'
       displayName: '[Compilación 1/2]: Instalar SDK .NET'
 
-    - task: CodeQL3000Init@0
-      displayName: CodeQL Initialize
-
     - task: DotNetCoreCLI@2
       inputs:
         projects: 'API/API.csproj'
       displayName: '[Compilación 2/2]: Compilación'
-
-    - task: CodeQL3000Finalize@0
-      displayName: CodeQL Finalize
 
     # Test unitarios
     - task: DotNetCoreCLI@2
