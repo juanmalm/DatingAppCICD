@@ -49,7 +49,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Invoke-WebRequest -Uri https://github.com/github/codeql-action/releases/latest/download/codeql-bundle-win64.tar.gz -OutFile D:\Juanma\Master\DevOps\Asignaturas\TFM\workspace\DatingAppCICD\codeql-bundle-win64.tar.gz
+          Invoke-WebRequest -Uri https://github.com/github/codeql-action/releases/latest/download/codeql-bundle-win64.tar.gz -OutFile .\codeql-bundle-win64.tar.gz
           tar -xvzf .\codeql-bundle-win64.tar.gz
           .\codeql\codeql database init --language csharp --trace-process-name Agent.Worker.exe --source-root API --begin-tracing /codeql-dbs/api-repo
           $json = Get-Content /codeql-dbs/api-repo/temp/tracingEnvironment/start-tracing.json | ConvertFrom-Json
@@ -60,7 +60,7 @@ stages:
               $template += $_.Value
               echo "$template"
           }
-        displayName: '[Evaluación y calidad del código 1/2]: Inicialización CodeQL'
+      displayName: '[Evaluación y calidad del código 1/2]: Inicialización CodeQL'
 
     # Compilación
     - task: UseDotNet@2
@@ -90,7 +90,7 @@ stages:
           .\codeql\codeql database finalize /codeql-dbs/api-repo
           .\codeql\codeql database analyze /codeql-dbs/api-repo csharp-code-scanning.qls --sarif-category=csharp --format=sarif-latest --output=/temp/api-repo-csharp.sarif
           echo $(ghtoken) | .\codeql\codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=/temp/api-repo-csharp.sarif --github-auth-stdin
-        displayName: '[Evaluación y calidad del código 1/2]: Análisis CodeQL'
+      displayName: '[Evaluación y calidad del código 1/2]: Análisis CodeQL'
 
     # Test unitarios
     - task: DotNetCoreCLI@2
