@@ -90,8 +90,9 @@ stages:
           }
           .\codeql\codeql database finalize ./codeql-dbs/api-repo
           .\codeql\codeql database analyze ./codeql-dbs/api-repo csharp-code-scanning.qls --sarif-category=csharp --format=sarif-latest --output=./codeql-dbs/api-repo/temp/api-repo-csharp.sarif
-          [Environment]::SetEnvironmentVariable("GITHUB_TOKEN", "$(ghtoken)", "User")
           .\codeql\codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=./codeql-dbs/api-repo/temp/api-repo-csharp.sarif
+      env:
+        GITHUB_TOKEN: $(ghtoken)
       displayName: '[Evaluación y calidad del código 2/2]: Análisis CodeQL'
 
     # Test unitarios
