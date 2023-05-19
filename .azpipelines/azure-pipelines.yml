@@ -95,6 +95,11 @@ stages:
         GITHUB_TOKEN: $(ghtoken)
       displayName: '[Evaluación y calidad del código 2/2]: Análisis CodeQL'
 
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.SourcesDirectory)/codeql-dbs/api-repo/temp/api-repo-csharp.sarif'
+        ArtifactName: 'AnalisisCodigo'
+
     # Test unitarios
     - task: DotNetCoreCLI@2
       inputs:
