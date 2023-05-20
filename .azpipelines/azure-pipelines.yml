@@ -40,6 +40,20 @@ stages:
         failTaskOnFailedTests: true
       displayName: '[Test unitarios 2/2]: Publicación de resultados'
 
+    # Empaquetado
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(Build.SourcesDirectory)/API/wwwroot'
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/cliente_$(Build.BuildId).zip'
+      displayName: '[Empaquetado 1/2]: Empaquetado'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'Cliente'
+      displayName: '[Empaquetado 2/2]: Publicación de artefacto'
+
   # Job para el API en .NET
   - job: API_NET
     steps:
@@ -70,14 +84,14 @@ stages:
       inputs:
         command: 'publish'
         projects: 'API/API.csproj'
-        arguments: '-c Release -o $(Build.SourcesDirectory)/API/output'
+        arguments: '-c Release -o $(Build.ArtifactStagingDirectory)/API_$(Build.BuildId)'
         publishWebProjects: false
         zipAfterPublish: true
       displayName: '[Empaquetado 1/2]: Empaquetado'
 
     - task: PublishBuildArtifacts@1
       inputs:
-        pathtoPublish: '$(Build.SourcesDirectory)/API/output'
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)/API_$(Build.BuildId)'
         artifactName: 'API'
       displayName: '[Empaquetado 2/2]: Publicación de artefacto'
 
