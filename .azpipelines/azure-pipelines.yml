@@ -61,7 +61,7 @@ stages:
               $template += $_.Value
               echo "$template"
           }
-      displayName: '[Evaluación y calidad del código 1/2]: Inicialización CodeQL'
+      displayName: '[Evaluación y calidad del código 1/3]: Inicialización CodeQL'
 
     # Compilación
     - task: UseDotNet@2
@@ -70,10 +70,20 @@ stages:
         version: '7.0.100'
       displayName: '[Compilación 1/2]: Instalar SDK .NET'
 
-    - task: DotNetCoreCLI@2
-      inputs:
-        projects: 'API/API.csproj'
-      displayName: '[Compilación 2/2]: Compilación'
+    #- task: DotNetCoreCLI@2
+    #  inputs:
+    #    projects: 'API/API.csproj'
+    #  displayName: '[Compilación 2/2]: Compilación'
+    - task: VSBuild@1
+        inputs:
+          solution: 'API/API.csproj'
+          # Disable MSBuild shared compilation for C# builds.
+          msbuildArgs: '/restore /p:UseSharedCompilation=false'
+          platform: Any CPU
+          configuration: Release
+          # Execute a clean build, in order to remove any existing build artifacts prior to the build.
+          clean: True
+       displayName: '[Compilación 2/2]: Compilación'
 
     # Evaluación y calidad del código
     - task: PowerShell@2
@@ -93,12 +103,12 @@ stages:
           .\codeql\codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=./codeql-dbs/api-repo/temp/api-repo-csharp.sarif
       env:
         GITHUB_TOKEN: $(ghtoken)
-      displayName: '[Evaluación y calidad del código 2/2]: Análisis CodeQL'
+      displayName: '[Evaluación y calidad del código 2/3]: Análisis CodeQL'
 
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.SourcesDirectory)/codeql-dbs/api-repo/temp/api-repo-csharp.sarif'
-        ArtifactName: 'AnalisisCodigo'
+        ArtifactName: '[Evaluación y calidad del código 3/3]: Publicación de resultados'
 
     # Test unitarios
     - task: DotNetCoreCLI@2
