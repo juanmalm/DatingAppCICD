@@ -56,6 +56,13 @@ stages:
         projects: 'API/API.csproj'
       displayName: '[Compilación 2/2]: Compilación'
 
+    # Test unitarios
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'test'
+        projects: 'API.UnitTests/API.UnitTests.csproj'
+      displayName: '[Test unitarios 1/1]: Ejecución y publicación de los test'
+
     # Evaluación y calidad del código
     - task: PowerShell@2
       inputs:
@@ -65,23 +72,14 @@ stages:
           tar -xvzf .\codeql-bundle-win64.tar.gz
           mkdir ./codeql-dbs
           .\codeql\codeql database create ./codeql-dbs/api-repo --language=csharp --source-root=API
-          .\codeql\codeql database analyze ./codeql-dbs/api-repo csharp-code-scanning.qls --sarif-category=csharp --format=sarif-latest --output=./codeql-dbs/api-repo/csharp-code-scanning.sarif
           .\codeql\codeql database analyze ./codeql-dbs/api-repo csharp-security-and-quality.qls --sarif-category=csharp --format=sarif-latest --output=./codeql-dbs/api-repo/csharp-security-and-quality.sarif
-          .\codeql\codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=./codeql-dbs/api-repo/csharp-code-scanning.sarif
           .\codeql\codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=./codeql-dbs/api-repo/csharp-security-and-quality.sarif
       env:
         GITHUB_TOKEN: $(ghtoken)
-      displayName: '[Evaluación y calidad del código 2/3]: Análisis CodeQL'
+      displayName: '[Evaluación y calidad del código 1/2]: Análisis CodeQL'
 
     - task: PublishBuildArtifacts@1
       inputs:
-        pathtoPublish: '$(Build.SourcesDirectory)/codeql-dbs/api-repo/*.sarif'
+        pathtoPublish: '$(Build.SourcesDirectory)/codeql-dbs/api-repo/csharp-security-and-quality.sarif'
         artifactName: 'AnalisisCodigo'
-      displayName: '[Evaluación y calidad del código 3/3]: Publicación de resultados'
-
-    # Test unitarios
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: 'test'
-        projects: 'API.UnitTests/API.UnitTests.csproj'
-      displayName: '[Test unitarios 1/1]: Ejecución y publicación de los test'
+      displayName: '[Evaluación y calidad del código 2/2]: Publicación de artefacto de resultados'
