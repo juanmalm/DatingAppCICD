@@ -43,7 +43,7 @@ namespace API.Controllers
             return new UserDto
             {
                 Username = user.UserName,
-                Token = await _tokenService.CreateToken(user),
+                Token = await _tokenService.CreateToken01(user),
                 KnownAs = user.KnownAs,
                 Gender = user.Gender
             };
@@ -65,7 +65,7 @@ namespace API.Controllers
             return new UserDto
             {
                 Username = user.UserName,
-                Token = await _tokenService.CreateToken(user),
+                Token = await _tokenService.CreateToken02(user),
                 PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
                 KnownAs = user.KnownAs,
                 Gender = user.Gender
