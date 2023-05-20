@@ -65,15 +65,17 @@ stages:
           tar -xvzf .\codeql-bundle-win64.tar.gz
           mkdir ./codeql-dbs
           .\codeql\codeql database create ./codeql-dbs/api-repo --language=csharp --source-root=API
-          .\codeql\codeql database analyze ./codeql-dbs/api-repo csharp-code-scanning.qls --sarif-category=csharp --format=sarif-latest --output=./codeql-dbs/api-repo/api-repo-csharp.sarif
-          .\codeql\codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=./codeql-dbs/api-repo/api-repo-csharp.sarif
+          .\codeql\codeql database analyze ./codeql-dbs/api-repo csharp-code-scanning.qls --sarif-category=csharp --format=sarif-latest --output=./codeql-dbs/api-repo/csharp-code-scanning.sarif
+          .\codeql\codeql database analyze ./codeql-dbs/api-repo csharp-security-and-quality.qls --sarif-category=csharp --format=sarif-latest --output=./codeql-dbs/api-repo/csharp-security-and-quality.sarif
+          .\codeql\codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=./codeql-dbs/api-repo/csharp-code-scanning.sarif
+          .\codeql\codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=./codeql-dbs/api-repo/csharp-security-and-quality.sarif
       env:
         GITHUB_TOKEN: $(ghtoken)
       displayName: '[Evaluación y calidad del código 2/3]: Análisis CodeQL'
 
     - task: PublishBuildArtifacts@1
       inputs:
-        pathtoPublish: '$(Build.SourcesDirectory)/codeql-dbs/api-repo/api-repo-csharp.sarif'
+        pathtoPublish: '$(Build.SourcesDirectory)/codeql-dbs/api-repo/*.sarif'
         artifactName: 'AnalisisCodigo'
       displayName: '[Evaluación y calidad del código 3/3]: Publicación de resultados'
 
