@@ -70,19 +70,9 @@ stages:
         version: '7.0.100'
       displayName: '[Compilación 1/2]: Instalar SDK .NET'
 
-    #- task: DotNetCoreCLI@2
-    #  inputs:
-    #    projects: 'API/API.csproj'
-    #  displayName: '[Compilación 2/2]: Compilación'
-    - task: VSBuild@1
+    - task: DotNetCoreCLI@2
       inputs:
-        solution: 'API/API.csproj'
-        # Disable MSBuild shared compilation for C# builds.
-        msbuildArgs: '/restore /p:UseSharedCompilation=false'
-        platform: Any CPU
-        configuration: Release
-        # Execute a clean build, in order to remove any existing build artifacts prior to the build.
-        clean: True
+        projects: 'API/API.csproj'
       displayName: '[Compilación 2/2]: Compilación'
 
     # Evaluación y calidad del código
