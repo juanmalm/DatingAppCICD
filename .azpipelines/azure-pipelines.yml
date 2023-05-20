@@ -45,7 +45,7 @@ stages:
       inputs:
         rootFolderOrFile: '$(Build.SourcesDirectory)/API/wwwroot'
         archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/cliente_$(Build.BuildId).zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/cliente.zip'
       displayName: '[Empaquetado 1/2]: Empaquetado'
 
     - task: PublishBuildArtifacts@1
@@ -84,14 +84,14 @@ stages:
       inputs:
         command: 'publish'
         projects: 'API/API.csproj'
-        arguments: '-c Release -o $(Build.ArtifactStagingDirectory)/API_$(Build.BuildId)'
+        arguments: '-c Release -o $(Build.ArtifactStagingDirectory)/API'
         publishWebProjects: false
         zipAfterPublish: true
       displayName: '[Empaquetado 1/2]: Empaquetado'
 
     - task: PublishBuildArtifacts@1
       inputs:
-        pathtoPublish: '$(Build.ArtifactStagingDirectory)/API_$(Build.BuildId)'
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)/API'
         artifactName: 'API'
       displayName: '[Empaquetado 2/2]: Publicación de artefacto'
 
