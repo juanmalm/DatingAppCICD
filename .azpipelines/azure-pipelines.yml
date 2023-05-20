@@ -45,23 +45,23 @@ stages:
     steps:
 
     # Evaluación y calidad del código
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          Invoke-WebRequest -Uri https://github.com/github/codeql-action/releases/latest/download/codeql-bundle-win64.tar.gz -OutFile .\codeql-bundle-win64.tar.gz
-          tar -xvzf .\codeql-bundle-win64.tar.gz
-          mkdir ./codeql-dbs
-          .\codeql\codeql database init --language csharp --trace-process-name Agent.Worker.exe --source-root API --begin-tracing ./codeql-dbs/api-repo
-          $json = Get-Content ./codeql-dbs/api-repo/temp/tracingEnvironment/start-tracing.json | ConvertFrom-Json
-          $json.PSObject.Properties | ForEach-Object {
-              $template = "##vso[task.setvariable variable="
-              $template += $_.Name
-              $template += "]"
-              $template += $_.Value
-              echo "$template"
-          }
-      displayName: '[Evaluación y calidad del código 1/3]: Inicialización CodeQL'
+    #- task: PowerShell@2
+    #  inputs:
+    #    targetType: 'inline'
+    #    script: |
+    #      Invoke-WebRequest -Uri https://github.com/github/codeql-action/releases/latest/download/codeql-bundle-win64.tar.gz -OutFile .\codeql-bundle-win64.tar.gz
+    #      tar -xvzf .\codeql-bundle-win64.tar.gz
+    #      mkdir ./codeql-dbs
+    #      .\codeql\codeql database init --language csharp --trace-process-name Agent.Worker.exe --source-root API --begin-tracing ./codeql-dbs/api-repo
+    #      $json = Get-Content ./codeql-dbs/api-repo/temp/tracingEnvironment/start-tracing.json | ConvertFrom-Json
+    #      $json.PSObject.Properties | ForEach-Object {
+    #          $template = "##vso[task.setvariable variable="
+    #          $template += $_.Name
+    #          $template += "]"
+    #          $template += $_.Value
+    #          echo "$template"
+    #      }
+    #  displayName: '[Evaluación y calidad del código 1/3]: Inicialización CodeQL'
 
     # Compilación
     - task: UseDotNet@2
@@ -80,15 +80,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          $json = Get-Content ./codeql-dbs/api-repo/temp/tracingEnvironment/end-tracing.json | ConvertFrom-Json
-          $json.PSObject.Properties | ForEach-Object {
-              $template = "##vso[task.setvariable variable="
-              $template += $_.Name
-              $template += "]"
-              $template += $_.Value
-              echo "$template"
-          }
-          .\codeql\codeql database finalize ./codeql-dbs/api-repo
+          .\codeql\codeql database create ./codeql-dbs/api-repo --language=csharp --source-root=API
           .\codeql\codeql database analyze ./codeql-dbs/api-repo csharp-code-scanning.qls --sarif-category=csharp --format=sarif-latest --output=./codeql-dbs/api-repo/temp/api-repo-csharp.sarif
           .\codeql\codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=./codeql-dbs/api-repo/temp/api-repo-csharp.sarif
       env:
