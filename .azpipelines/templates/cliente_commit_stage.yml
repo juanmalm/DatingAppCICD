@@ -1,0 +1,41 @@
+steps:
+
+# Compilación
+- task: NodeTool@0
+  inputs:
+    versionSpec: '16.x'
+  displayName: '[Compilación 1/2]: Instalar Node.js'
+
+- script: |
+    call npm install -g @angular/cli
+    call npm install --legacy-peer-deps
+    call ng build
+  workingDirectory: $(Build.SourcesDirectory)/client
+  displayName: '[Compilación 2/2]: Compilación'
+
+# Test unitarios
+- script: |
+    call ng test --no-watch --reporters=junit
+    exit 0
+  workingDirectory: $(Build.SourcesDirectory)/client
+  displayName: '[Test unitarios 1/2]: Ejecución de los test'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '$(Build.SourcesDirectory)/client/test-results.xml'
+    failTaskOnFailedTests: true
+  displayName: '[Test unitarios 2/2]: Publicación de resultados'
+
+# Empaquetado
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)/API/wwwroot'
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/cliente.zip'
+  displayName: '[Empaquetado 1/2]: Empaquetado'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'Cliente'
+  displayName: '[Empaquetado 2/2]: Publicación de artefacto'

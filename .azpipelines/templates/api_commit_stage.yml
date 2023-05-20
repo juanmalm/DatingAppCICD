@@ -1,0 +1,38 @@
+steps:
+
+# Compilación
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '7.0.100'
+  displayName: '[Compilación 1/2]: Instalar SDK .NET'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: 'API/API.csproj'
+    arguments: '-c Release'
+  displayName: '[Compilación 2/2]: Compilación'
+
+# Test unitarios
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: 'API.UnitTests/API.UnitTests.csproj'
+  displayName: '[Test unitarios 1/1]: Ejecución y publicación de los test'
+
+# Empaquetado
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    projects: 'API/API.csproj'
+    arguments: '-c Release -o $(Build.ArtifactStagingDirectory)/API'
+    publishWebProjects: false
+    zipAfterPublish: true
+  displayName: '[Empaquetado 1/2]: Empaquetado'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/API'
+    artifactName: 'API'
+  displayName: '[Empaquetado 2/2]: Publicación de artefacto'
