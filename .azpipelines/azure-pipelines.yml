@@ -109,7 +109,7 @@ stages:
       inputs:
         pathtoPublish: '$(Build.SourcesDirectory)/codeql-dbs/api-repo/temp/api-repo-csharp.sarif'
         artifactName: 'AnalisisCodigo'
-       displayName: '[Evaluación y calidad del código 3/3]: Publicación de resultados'
+      displayName: '[Evaluación y calidad del código 3/3]: Publicación de resultados'
 
     # Test unitarios
     - task: DotNetCoreCLI@2
