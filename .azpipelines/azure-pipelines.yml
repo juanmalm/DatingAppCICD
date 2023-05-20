@@ -53,7 +53,9 @@ stages:
 
     - task: DotNetCoreCLI@2
       inputs:
+        command: 'build'
         projects: 'API/API.csproj'
+        arguments: '-c Release'
       displayName: '[Compilación 2/2]: Compilación'
 
     # Test unitarios
@@ -62,6 +64,22 @@ stages:
         command: 'test'
         projects: 'API.UnitTests/API.UnitTests.csproj'
       displayName: '[Test unitarios 1/1]: Ejecución y publicación de los test'
+
+    # Empaquetado
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'publish'
+        projects: 'API/API.csproj'
+        arguments: '-c Release -o $(Build.SourcesDirectory)/API/output'
+        publishWebProjects: false
+        zipAfterPublish: true
+      displayName: '[Empaquetado 1/2]: Empaquetado'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.SourcesDirectory)/API/output'
+        artifactName: 'API'
+      displayName: '[Empaquetado 2/2]: Publicación de artefacto'
 
   # Job para análisis y calidad del código de todo el proyecto
   - job: Calidad_Codigo
