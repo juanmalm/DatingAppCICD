@@ -43,4 +43,4 @@ steps:
 # Análisis y calidad del código
 - template: analisis_calidad_codigo.yml
   parameters:
-    channel: javascript
+    language: javascript
