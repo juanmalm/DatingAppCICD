@@ -19,8 +19,3 @@ stages:
   - job: API_NET
     steps:
     - template: templates/api_commit_stage.yml
-
-  # Job para análisis y calidad del código de todo el proyecto
-  - job: Calidad_Codigo
-    steps:
-    - template: templates/analisis_calidad_codigo.yml
