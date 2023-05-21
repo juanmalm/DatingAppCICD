@@ -3,10 +3,14 @@ parameters:
   type: string
 
 variables:
-  repo: 'juanmalm/DatingAppCICD'
-  codeqlTool: '$(Build.SourcesDirectory)/codeql/codeql'
-  dbRoot: '$(Build.SourcesDirectory)/codeql-dbs'
-  db: '$(dbRoot)/repo-${{ parameters.language }}'
+- name: repo
+  value: 'juanmalm/DatingAppCICD'
+- name: codeqlTool
+  value: '$(Build.SourcesDirectory)/codeql/codeql'
+- name: dbRoot
+  value: '$(Build.SourcesDirectory)/codeql-dbs'
+- name: db
+  value: '$(dbRoot)/repo-${{ parameters.language }}'
 
 steps:
 
