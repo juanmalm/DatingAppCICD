@@ -1,16 +1,18 @@
-variables:
-- name: repo
-  value: 'juanmalm/DatingAppCICD'
-- name: codeqlTool
-  value: '$(Build.SourcesDirectory)/codeql/codeql'
-- name: dbRoot
-  value: '$(Build.SourcesDirectory)/codeql-dbs'
-- name: db
-  value: '$(dbRoot)/repo-${{ parameters.language }}'
-
 parameters:
 - name: language
   type: string
+- name: repo
+  type: string
+  default: 'juanmalm/DatingAppCICD'
+- name: codeqlTool
+  type: string
+  default: '$(Build.SourcesDirectory)/codeql/codeql'
+- name: dbRoot
+  type: string
+  default: '$(Build.SourcesDirectory)/codeql-dbs'
+- name: db
+  type: string
+  default: '$(dbRoot)/repo-$(language)'
 
 steps:
 
@@ -27,21 +29,21 @@ steps:
     targetType: 'inline'
     script: |
       mkdir $(dbRoot)
-      $(codeql) database create $(db) --language=${{ parameters.language }} --no-run-unnecessary-builds --source-root .
-      $(codeql) database analyze $(db) ${{ parameters.language }}-security-and-quality.qls --sarif-category=${{ parameters.language }} --format=sarif-latest --output=$(db)/${{ parameters.language }}-security-and-quality.sarif
+      $(codeql) database create $(db) --language=$(language) --no-run-unnecessary-builds --source-root .
+      $(codeql) database analyze $(db) $(language)-security-and-quality.qls --sarif-category=$(language) --format=sarif-latest --output=$(db)/$(language)-security-and-quality.sarif
   displayName: '[Evaluación y calidad del código 2/4]: Análisis CodeQL'
 
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
-      $(codeql) github upload-results --repository=$(repo) --sarif=$(db)/${{ parameters.language }}-security-and-quality.sarif
+      $(codeql) github upload-results --repository=$(repo) --sarif=$(db)/$(language)-security-and-quality.sarif
   env:
     GITHUB_TOKEN: $(ghtoken)
   displayName: '[Evaluación y calidad del código 3/4]: Publicación resultados en GitHub'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(db)/${{ parameters.language }}-security-and-quality.sarif'
+    pathtoPublish: '$(db)/$(language)-security-and-quality.sarif'
     artifactName: 'AnalisisCodigo'
   displayName: '[Evaluación y calidad del código 4/4]: Publicación de artefacto de resultados'
