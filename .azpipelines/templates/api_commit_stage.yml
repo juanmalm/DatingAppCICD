@@ -36,3 +36,8 @@ steps:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)/API'
     artifactName: 'API'
   displayName: '[Empaquetado 2/2]: Publicación de artefacto'
+
+# Análisis y calidad del código
+- template: analisis_calidad_codigo.yml
+  parameters:
+    channel: csharp

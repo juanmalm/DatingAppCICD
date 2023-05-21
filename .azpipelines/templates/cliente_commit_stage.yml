@@ -39,3 +39,8 @@ steps:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'Cliente'
   displayName: '[Empaquetado 2/2]: Publicación de artefacto'
+
+# Análisis y calidad del código
+- template: analisis_calidad_codigo.yml
+  parameters:
+    channel: javascript

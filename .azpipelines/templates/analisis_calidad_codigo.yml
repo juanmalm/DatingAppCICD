@@ -1,41 +1,43 @@
-  steps:
+parameters:
+- name: language
+  type: string
 
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
-        Invoke-WebRequest -Uri https://github.com/github/codeql-action/releases/latest/download/codeql-bundle-win64.tar.gz -OutFile .\codeql-bundle-win64.tar.gz
-        tar -xvzf .\codeql-bundle-win64.tar.gz
-    displayName: '[Evaluación y calidad del código 1/5]: Descarga de CodeQL'
+variables:
+  repo: 'juanmalm/DatingAppCICD'
+  codeqlTool: '$(Build.SourcesDirectory)/codeql/codeql'
+  dbRoot: '$(Build.SourcesDirectory)/codeql-dbs'
+  db: '$(dbRoot)/repo-${{ parameters.language }}'
 
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
-        mkdir ./codeql-dbs
-        .\codeql\codeql database create ./codeql-dbs/repo-multi --db-cluster --language=csharp,javascript --no-run-unnecessary-builds --source-root .
-        .\codeql\codeql database analyze ./codeql-dbs/repo-multi/csharp csharp-security-and-quality.qls --sarif-category=csharp --format=sarif-latest --output=./codeql-dbs/repo-multi/csharp-security-and-quality.sarif
-        .\codeql\codeql database analyze ./codeql-dbs/repo-multi/javascript javascript-security-and-quality.qls --sarif-category=javascript --format=sarif-latest --output=./codeql-dbs/repo-multi/javascript-security-and-quality.sarif
-    displayName: '[Evaluación y calidad del código 2/5]: Análisis CodeQL'
+steps:
 
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
-        .\codeql\codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=./codeql-dbs/repo-multi/csharp-security-and-quality.sarif
-        .\codeql\codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=./codeql-dbs/repo-multi/javascript-security-and-quality.sarif
-    env:
-      GITHUB_TOKEN: $(ghtoken)
-    displayName: '[Evaluación y calidad del código 3/5]: Publicación resultados en GitHub'
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Invoke-WebRequest -Uri https://github.com/github/codeql-action/releases/latest/download/codeql-bundle-win64.tar.gz -OutFile .\codeql-bundle-win64.tar.gz
+      tar -xvzf .\codeql-bundle-win64.tar.gz
+  displayName: '[Evaluación y calidad del código 1/4]: Descarga de CodeQL'
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathtoPublish: '$(Build.SourcesDirectory)/codeql-dbs/repo-multi/csharp-security-and-quality.sarif'
-      artifactName: 'AnalisisCodigo'
-    displayName: '[Evaluación y calidad del código 4/5]: Publicación de artefacto de resultados de C#'
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      mkdir $(dbRoot)
+      $(codeql) database create $(db) --language=${{ parameters.language }} --no-run-unnecessary-builds --source-root .
+      $(codeql) database analyze $(db) ${{ parameters.language }}-security-and-quality.qls --sarif-category=${{ parameters.language }} --format=sarif-latest --output=$(db)/${{ parameters.language }}-security-and-quality.sarif
+  displayName: '[Evaluación y calidad del código 2/4]: Análisis CodeQL'
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathtoPublish: '$(Build.SourcesDirectory)/codeql-dbs/repo-multi/javascript-security-and-quality.sarif'
-      artifactName: 'AnalisisCodigo'
-    displayName: '[Evaluación y calidad del código 5/5]: Publicación de artefacto de resultados de Javascript'
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $(codeql) github upload-results --repository=$(repo) --sarif=$(db)/${{ parameters.language }}-security-and-quality.sarif
+  env:
+    GITHUB_TOKEN: $(ghtoken)
+  displayName: '[Evaluación y calidad del código 3/4]: Publicación resultados en GitHub'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(db)/${{ parameters.language }}-security-and-quality.sarif'
+    artifactName: 'AnalisisCodigo'
+  displayName: '[Evaluación y calidad del código 4/4]: Publicación de artefacto de resultados'
