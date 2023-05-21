@@ -1,7 +1,3 @@
-parameters:
-- name: language
-  type: string
-
 variables:
 - name: repo
   value: 'juanmalm/DatingAppCICD'
@@ -11,6 +7,10 @@ variables:
   value: '$(Build.SourcesDirectory)/codeql-dbs'
 - name: db
   value: '$(dbRoot)/repo-${{ parameters.language }}'
+
+parameters:
+- name: language
+  type: string
 
 steps:
 
