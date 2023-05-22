@@ -6,13 +6,13 @@ parameters:
   default: 'juanmalm/DatingAppCICD'
 - name: codeqlTool
   type: string
-  default: '$(Build.SourcesDirectory)/codeql/codeql'
+  default: './codeql/codeql'
 - name: dbRoot
   type: string
-  default: '$(Build.SourcesDirectory)/codeql-dbs'
+  default: './codeql-dbs'
 - name: db
   type: string
-  default: '$(Build.SourcesDirectory)/codeql-dbs/db'
+  default: './codeql-dbs/db'
 
 steps:
 
