@@ -12,7 +12,7 @@ parameters:
   default: '$(Build.SourcesDirectory)/codeql-dbs'
 - name: db
   type: string
-  default: '$(dbRoot)/repo-$(language)'
+  default: '${{ parameters.dbRoot }}/repo-${{ parameters.language }}'
 
 steps:
 
@@ -28,22 +28,22 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      mkdir $(dbRoot)
-      $(codeqlTool) database create $(db) --language=$(language) --no-run-unnecessary-builds --source-root .
-      $(codeqlTool) database analyze $(db) $(language)-security-and-quality.qls --sarif-category=$(language) --format=sarif-latest --output=$(db)/$(language)-security-and-quality.sarif
+      mkdir ${{ parameters.dbRoot }}
+      ${{ parameters.codeqlTool }} database create ${{ parameters.db }} --language=${{ parameters.language }} --no-run-unnecessary-builds --source-root .
+      ${{ parameters.codeqlTool }} database analyze ${{ parameters.db }} ${{ parameters.language }}-security-and-quality.qls --sarif-category=${{ parameters.language }} --format=sarif-latest --output=${{ parameters.db }}/${{ parameters.language }}-security-and-quality.sarif
   displayName: '[Evaluación y calidad del código 2/4]: Análisis CodeQL'
 
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
-      $(codeqlTool) github upload-results --repository=${{ parameters.repo }} --sarif=$(db)/$(language)-security-and-quality.sarif
+      ${{ parameters.codeqlTool }} github upload-results --repository=${{ parameters.repo }} --sarif=${{ parameters.db }}/${{ parameters.language }}-security-and-quality.sarif
   env:
     GITHUB_TOKEN: $(ghtoken)
   displayName: '[Evaluación y calidad del código 3/4]: Publicación resultados en GitHub'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(db)/$(language)-security-and-quality.sarif'
+    pathtoPublish: '${{ parameters.db }}/${{ parameters.language }}-security-and-quality.sarif'
     artifactName: 'AnalisisCodigo'
   displayName: '[Evaluación y calidad del código 4/4]: Publicación de artefacto de resultados'
