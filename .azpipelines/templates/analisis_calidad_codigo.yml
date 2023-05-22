@@ -29,8 +29,8 @@ steps:
     targetType: 'inline'
     script: |
       mkdir ${{ parameters.dbRoot }}
-      ${{ parameters.codeqlTool }} database create ${{ parameters.db }} --language=${{ parameters.language }} --no-run-unnecessary-builds --source-root .
-      ${{ parameters.codeqlTool }} database analyze ${{ parameters.db }} ${{ parameters.language }}-security-and-quality.qls --sarif-category=${{ parameters.language }} --format=sarif-latest --output=${{ parameters.db }}/${{ parameters.language }}-security-and-quality.sarif
+      ${{ parameters.codeqlTool }} database create ${{ parameters.db }} --db-cluster --language=${{ parameters.language }} --no-run-unnecessary-builds --source-root .
+      ${{ parameters.codeqlTool }} database analyze ${{ parameters.db }}/${{ parameters.language }} ${{ parameters.language }}-security-and-quality.qls --sarif-category=${{ parameters.language }} --format=sarif-latest --output=${{ parameters.db }}/${{ parameters.language }}-security-and-quality.sarif
   displayName: '[Evaluación y calidad del código 2/4]: Análisis CodeQL'
 
 - task: PowerShell@2
