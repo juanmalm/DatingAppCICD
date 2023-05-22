@@ -12,7 +12,7 @@ parameters:
   default: '$(Build.SourcesDirectory)/codeql-dbs'
 - name: db
   type: string
-  default: '${{ parameters.dbRoot }}/repo-${{ parameters.language }}'
+  default: '$(Build.SourcesDirectory)/codeql-dbs/db'
 
 steps:
 
