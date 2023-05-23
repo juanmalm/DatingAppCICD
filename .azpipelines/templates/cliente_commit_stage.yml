@@ -26,6 +26,11 @@ steps:
     failTaskOnFailedTests: true
   displayName: '[Test unitarios 2/2]: Publicación de resultados'
 
+# Análisis y calidad del código
+- template: analisis_calidad_codigo.yml
+  parameters:
+    language: javascript
+
 # Empaquetado
 - task: ArchiveFiles@2
   inputs:
@@ -39,8 +44,3 @@ steps:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'Cliente'
   displayName: '[Empaquetado 2/2]: Publicación de artefacto'
-
-# Análisis y calidad del código
-- template: analisis_calidad_codigo.yml
-  parameters:
-    language: javascript

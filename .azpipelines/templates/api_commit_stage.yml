@@ -21,6 +21,11 @@ steps:
     projects: 'API.UnitTests/API.UnitTests.csproj'
   displayName: '[Test unitarios 1/1]: Ejecución y publicación de los test'
 
+# Análisis y calidad del código
+- template: analisis_calidad_codigo.yml
+  parameters:
+    language: csharp
+
 # Empaquetado
 - task: DotNetCoreCLI@2
   inputs:
@@ -36,8 +41,3 @@ steps:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)/API'
     artifactName: 'API'
   displayName: '[Empaquetado 2/2]: Publicación de artefacto'
-
-# Análisis y calidad del código
-- template: analisis_calidad_codigo.yml
-  parameters:
-    language: csharp
