@@ -1,46 +1,46 @@
 steps:
 
-# Compilaci髇
+# Compilaci贸n
 - task: NodeTool@0
+  displayName: '[Compilaci贸n 1/2]: Instalar Node.js'
   inputs:
     versionSpec: '16.x'
-  displayName: '[Compilaci髇 1/2]: Instalar Node.js'
 
 - script: |
     call npm install -g @angular/cli
     call npm install --legacy-peer-deps
     call ng build
   workingDirectory: $(Build.SourcesDirectory)/client
-  displayName: '[Compilaci髇 2/2]: Compilaci髇'
+  displayName: '[Compilaci贸n 2/2]: Compilaci贸n'
 
 # Test unitarios
 - script: |
     call ng test --no-watch --reporters=junit
     exit 0
   workingDirectory: $(Build.SourcesDirectory)/client
-  displayName: '[Test unitarios 1/2]: Ejecuci髇 de los test'
+  displayName: '[Test unitarios 1/2]: Ejecuci贸n de los test'
 
 - task: PublishTestResults@2
+  displayName: '[Test unitarios 2/2]: Publicaci贸n de resultados'
   inputs:
     testResultsFiles: '$(Build.SourcesDirectory)/client/test-results.xml'
     failTaskOnFailedTests: true
-  displayName: '[Test unitarios 2/2]: Publicaci髇 de resultados'
 
-# An醠isis y calidad del c骴igo
+# An谩lisis y calidad del c贸digo
 - template: analisis_calidad_codigo.yml
   parameters:
     language: javascript
 
 # Empaquetado
 - task: ArchiveFiles@2
+  displayName: '[Empaquetado 1/2]: Empaquetado'
   inputs:
     rootFolderOrFile: '$(Build.SourcesDirectory)/API/wwwroot'
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/cliente.zip'
-  displayName: '[Empaquetado 1/2]: Empaquetado'
 
 - task: PublishBuildArtifacts@1
+  displayName: '[Empaquetado 2/2]: Publicaci贸n de artefacto'
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'Cliente'
-  displayName: '[Empaquetado 2/2]: Publicaci髇 de artefacto'
