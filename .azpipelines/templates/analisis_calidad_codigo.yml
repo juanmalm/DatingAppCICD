@@ -1,18 +1,6 @@
 parameters:
 - name: language
   type: string
-- name: repo
-  type: string
-  default: 'juanmalm/DatingAppCICD'
-- name: codeqlTool
-  type: string
-  default: './codeql/codeql'
-- name: dbRoot
-  type: string
-  default: './codeql-dbs'
-- name: db
-  type: string
-  default: './codeql-dbs/db'
 
 steps:
 
@@ -29,21 +17,21 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      mkdir ${{ parameters.dbRoot }}
-      ${{ parameters.codeqlTool }} database create ${{ parameters.db }} --language=${{ parameters.language }} --no-run-unnecessary-builds --source-root .
-      ${{ parameters.codeqlTool }} database analyze ${{ parameters.db }} ${{ parameters.language }}-security-and-quality.qls --sarif-category=${{ parameters.language }} --format=sarif-latest --output=${{ parameters.db }}/${{ parameters.language }}-security-and-quality.sarif
+      mkdir './codeql-dbs'
+      './codeql/codeql' database create './codeql-dbs/db' --language=${{ parameters.language }} --no-run-unnecessary-builds --source-root .
+      './codeql/codeql' database analyze './codeql-dbs/db' ${{ parameters.language }}-security-and-quality.qls --sarif-category=${{ parameters.language }} --format=sarif-latest --output='./codeql-dbs/db'/${{ parameters.language }}-security-and-quality.sarif
 
 - task: PowerShell@2
   displayName: '[Evaluación y calidad del código 3/4]: Publicación resultados en GitHub'
   inputs:
     targetType: 'inline'
     script: |
-      ${{ parameters.codeqlTool }} github upload-results --repository=${{ parameters.repo }} --ref=refs/heads/main --sarif=${{ parameters.db }}/${{ parameters.language }}-security-and-quality.sarif
+      './codeql/codeql' github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif='./codeql-dbs/db'/${{ parameters.language }}-security-and-quality.sarif
   env:
     GITHUB_TOKEN: $(ghtoken)
 
 - task: PublishBuildArtifacts@1
   displayName: '[Evaluación y calidad del código 4/4]: Publicación de artefacto de resultados'
   inputs:
-    pathtoPublish: '${{ parameters.db }}/${{ parameters.language }}-security-and-quality.sarif'
+    pathtoPublish: ''./codeql-dbs/db'/${{ parameters.language }}-security-and-quality.sarif'
     artifactName: 'AnalisisCodigo'
