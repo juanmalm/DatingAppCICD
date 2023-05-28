@@ -19,14 +19,16 @@ steps:
     script: |
       mkdir ./codeql-dbs
       ./codeql/codeql database create ./codeql-dbs/db --language=${{ parameters.language }} --no-run-unnecessary-builds --source-root .
-      ./codeql/codeql database analyze ./codeql-dbs/db ${{ parameters.language }}-security-and-quality.qls --sarif-category=${{ parameters.language }} --format=sarif-latest --output=./codeql-dbs/db/${{ parameters.language }}-security-and-quality.sarif
+      ./codeql/codeql database analyze ./codeql-dbs/db ${{ parameters.language }}-security-and-quality.qls --sarif-category=${{ parameters.language }}  `
+        --format=sarif-latest --output=./codeql-dbs/db/${{ parameters.language }}-security-and-quality.sarif
 
 - task: PowerShell@2
   displayName: '[Evaluación y calidad del código 3/4]: Publicación resultados en GitHub'
   inputs:
     targetType: 'inline'
     script: |
-      ./codeql/codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=./codeql-dbs/db/${{ parameters.language }}-security-and-quality.sarif
+      ./codeql/codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main  `
+        --sarif=./codeql-dbs/db/${{ parameters.language }}-security-and-quality.sarif
   env:
     GITHUB_TOKEN: $(ghtoken)
 
