@@ -1,43 +1,43 @@
 steps:
 
-# Compilaci髇
+# Compilaci贸n
 - task: UseDotNet@2
+  displayName: '[Compilaci贸n 1/2]: Instalar SDK .NET'
   inputs:
     packageType: 'sdk'
     version: '7.0.100'
-  displayName: '[Compilaci髇 1/2]: Instalar SDK .NET'
 
 - task: DotNetCoreCLI@2
+  displayName: '[Compilaci贸n 2/2]: Compilaci贸n'
   inputs:
     command: 'build'
     projects: 'API/API.csproj'
     arguments: '-c Release'
-  displayName: '[Compilaci髇 2/2]: Compilaci髇'
 
 # Test unitarios
 - task: DotNetCoreCLI@2
+  displayName: '[Test unitarios 1/1]: Ejecuci贸n y publicaci贸n de los test'
   inputs:
     command: 'test'
     projects: 'API.UnitTests/API.UnitTests.csproj'
-  displayName: '[Test unitarios 1/1]: Ejecuci髇 y publicaci髇 de los test'
 
-# An醠isis y calidad del c骴igo
+# An谩lisis y calidad del c贸digo
 - template: analisis_calidad_codigo.yml
   parameters:
     language: csharp
 
 # Empaquetado
 - task: DotNetCoreCLI@2
+  displayName: '[Empaquetado 1/2]: Empaquetado'
   inputs:
     command: 'publish'
     projects: 'API/API.csproj'
     arguments: '-c Release -o $(Build.ArtifactStagingDirectory)/API'
     publishWebProjects: false
     zipAfterPublish: true
-  displayName: '[Empaquetado 1/2]: Empaquetado'
 
 - task: PublishBuildArtifacts@1
+  displayName: '[Empaquetado 2/2]: Publicaci贸n de artefacto'
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)/API'
     artifactName: 'API'
-  displayName: '[Empaquetado 2/2]: Publicaci髇 de artefacto'

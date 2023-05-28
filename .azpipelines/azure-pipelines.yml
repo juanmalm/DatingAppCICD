@@ -13,7 +13,7 @@ pool:
 
 stages:
 
-# Etapa de commit. Incluye los procesos de compilación, test unitarios, evaluación del código y empaquetado
+# Etapa de commit. Incluye los procesos de compilaciÃ³n, test unitarios, evaluaciÃ³n del cÃ³digo y empaquetado
 - stage: Etapa_Commit
   jobs:
 
@@ -27,7 +27,7 @@ stages:
     steps:
     - template: templates/api_commit_stage.yml
 
-# Etapa de test de aceptación automáticos
+# Etapa de test de aceptaciï¿½n automï¿½ticos
 - stage: Etapa_Test_Aceptacion
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
   jobs:

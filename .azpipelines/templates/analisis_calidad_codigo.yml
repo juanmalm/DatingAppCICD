@@ -1,49 +1,37 @@
 parameters:
 - name: language
   type: string
-- name: repo
-  type: string
-  default: 'juanmalm/DatingAppCICD'
-- name: codeqlTool
-  type: string
-  default: './codeql/codeql'
-- name: dbRoot
-  type: string
-  default: './codeql-dbs'
-- name: db
-  type: string
-  default: './codeql-dbs/db'
 
 steps:
 
 - task: PowerShell@2
+  displayName: '[Evaluaci贸n y calidad del c贸digo 1/4]: Descarga de CodeQL'
   inputs:
     targetType: 'inline'
     script: |
       Invoke-WebRequest -Uri https://github.com/github/codeql-action/releases/latest/download/codeql-bundle-win64.tar.gz -OutFile .\codeql-bundle-win64.tar.gz
       tar -xvzf .\codeql-bundle-win64.tar.gz
-  displayName: '[Evaluaci髇 y calidad del c骴igo 1/4]: Descarga de CodeQL'
 
 - task: PowerShell@2
+  displayName: '[Evaluaci贸n y calidad del c贸digo 2/4]: An谩lisis CodeQL'
   inputs:
     targetType: 'inline'
     script: |
-      mkdir ${{ parameters.dbRoot }}
-      ${{ parameters.codeqlTool }} database create ${{ parameters.db }} --language=${{ parameters.language }} --no-run-unnecessary-builds --source-root .
-      ${{ parameters.codeqlTool }} database analyze ${{ parameters.db }} ${{ parameters.language }}-security-and-quality.qls --sarif-category=${{ parameters.language }} --format=sarif-latest --output=${{ parameters.db }}/${{ parameters.language }}-security-and-quality.sarif
-  displayName: '[Evaluaci髇 y calidad del c骴igo 2/4]: An醠isis CodeQL'
+      mkdir ./codeql-dbs
+      ./codeql/codeql database create ./codeql-dbs/db --language=${{ parameters.language }} --no-run-unnecessary-builds --source-root .
+      ./codeql/codeql database analyze ./codeql-dbs/db ${{ parameters.language }}-security-and-quality.qls --sarif-category=${{ parameters.language }} --format=sarif-latest --output=./codeql-dbs/db/${{ parameters.language }}-security-and-quality.sarif
 
 - task: PowerShell@2
+  displayName: '[Evaluaci贸n y calidad del c贸digo 3/4]: Publicaci贸n resultados en GitHub'
   inputs:
     targetType: 'inline'
     script: |
-      ${{ parameters.codeqlTool }} github upload-results --repository=${{ parameters.repo }} --ref=refs/heads/main --sarif=${{ parameters.db }}/${{ parameters.language }}-security-and-quality.sarif
+      ./codeql/codeql github upload-results --repository=juanmalm/DatingAppCICD --ref=refs/heads/main --sarif=./codeql-dbs/db/${{ parameters.language }}-security-and-quality.sarif
   env:
     GITHUB_TOKEN: $(ghtoken)
-  displayName: '[Evaluaci髇 y calidad del c骴igo 3/4]: Publicaci髇 resultados en GitHub'
 
 - task: PublishBuildArtifacts@1
+  displayName: '[Evaluaci贸n y calidad del c贸digo 4/4]: Publicaci贸n de artefacto de resultados'
   inputs:
-    pathtoPublish: '${{ parameters.db }}/${{ parameters.language }}-security-and-quality.sarif'
+    pathtoPublish: './codeql-dbs/db/${{ parameters.language }}-security-and-quality.sarif'
     artifactName: 'AnalisisCodigo'
-  displayName: '[Evaluaci髇 y calidad del c骴igo 4/4]: Publicaci髇 de artefacto de resultados'
