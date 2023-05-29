@@ -1,0 +1,9 @@
+steps:
+
+- download: current
+  displayName: '[Test aceptación 1/X]: Descarga artefacto Cliente'
+  artifact: 'Cliente'
+
+- download: current
+  displayName: '[Test aceptación 2/X]: Descarga artefacto API'
+  artifact: 'API'

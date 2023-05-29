@@ -27,17 +27,8 @@ stages:
     steps:
     - template: templates/api_commit_stage.yml
 
-# Etapa de test de aceptaci�n autom�ticos
+# Etapa de test de aceptación automáticos
 - stage: Etapa_Test_Aceptacion
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
-  jobs:
-
-  # Job para el cliente en Angular
-  - job: Cliente_Angular
-    steps:
-    - bash: echo "Hello world"
-
-  # Job para el API en .NET
-  - job: API_NET
-    steps:
-    - bash: echo "Hello world"
+  steps:
+  - template: templates/test_aceptacion.yml
