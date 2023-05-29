@@ -30,5 +30,7 @@ stages:
 # Etapa de test de aceptación automáticos
 - stage: Etapa_Test_Aceptacion
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
-  steps:
-  - template: templates/test_aceptacion.yml
+  jobs:
+  - job: Etapa_Test_Aceptacion
+    steps:
+    - template: templates/test_aceptacion.yml
