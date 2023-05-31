@@ -19,7 +19,7 @@ steps:
 - task: ExtractFiles@1
   displayName: '[Test aceptación 4/8]: Desempaquetar artefacto Cliente'
   inputs:
-    archiveFilePatterns: 'Cliente.zip'
+    archiveFilePatterns: 'cliente.zip'
     destinationFolder: 'Cliente'
 
 - task: ExtractFiles@1
