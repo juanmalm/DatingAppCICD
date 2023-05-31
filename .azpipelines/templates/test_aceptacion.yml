@@ -1,5 +1,6 @@
 steps:
 
+# Descarga de artefactos
 - download: current
   displayName: '[Test aceptación 1/X]: Descarga artefacto Cliente'
   artifact: 'Cliente'
@@ -7,3 +8,10 @@ steps:
 - download: current
   displayName: '[Test aceptación 2/X]: Descarga artefacto API'
   artifact: 'API'
+
+# Test unitarios
+- task: DotNetCoreCLI@2
+  displayName: '[Test aceptación X/X]: Ejecución y publicación de los test'
+  inputs:
+    command: 'test'
+    projects: 'API.AcceptanceTests/API.AcceptanceTests.csproj'
