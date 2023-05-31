@@ -11,6 +11,8 @@ namespace API.Services
         private readonly Cloudinary _cloudinary;
         public PhotoService(IOptions<CloudinarySettings> config)
         {
+            if (string.IsNullOrEmpty(config.Value.CloudName)) return;
+
             var acc = new Account
             (
                 config.Value.CloudName,
@@ -25,7 +27,7 @@ namespace API.Services
         {
             var uploadResult = new ImageUploadResult();
 
-            if (file.Length > 0)
+            if (_cloudinary is null && file.Length > 0)
             {
                 using var stream = file.OpenReadStream();
                 var uploadParams = new ImageUploadParams
@@ -42,6 +44,8 @@ namespace API.Services
 
         public async Task<DeletionResult> DeletePhotoAsync(string publicId)
         {
+            if (_cloudinary is null) return new DeletionResult();
+
             var deleteParams = new DeletionParams(publicId);
 
             return await _cloudinary.DestroyAsync(deleteParams);

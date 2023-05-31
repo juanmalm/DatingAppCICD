@@ -1,23 +1,53 @@
 steps:
 
-# Descarga de artefactos
-- download: current
-  displayName: '[Test aceptación 1/X]: Descarga artefacto Cliente'
-  artifact: 'Cliente'
-
-- download: current
-  displayName: '[Test aceptación 2/X]: Descarga artefacto API'
-  artifact: 'API'
-
-# Test unitarios
 - task: UseDotNet@2
-  displayName: '[Test aceptación X/X]: Instalar SDK .NET'
+  displayName: '[Test aceptación 1/8]: Instalar SDK .NET'
   inputs:
     packageType: 'sdk'
     version: '7.0.100'
 
+# Descarga de artefactos
+- download: current
+  displayName: '[Test aceptación 2/8]: Descarga artefacto Cliente'
+  artifact: 'Cliente'
+
+- download: current
+  displayName: '[Test aceptación 3/8]: Descarga artefacto API'
+  artifact: 'API'
+
+# Desempaquetar artefactos
+- task: ExtractFiles@1
+  displayName: '[Test aceptación 4/8]: Desempaquetar artefacto Cliente'
+  inputs:
+    archiveFilePatterns: 'Cliente.zip'
+    destinationFolder: 'Cliente'
+
+- task: ExtractFiles@1
+  displayName: '[Test aceptación 5/8]: Desempaquetar artefacto API'
+  inputs:
+    archiveFilePatterns: 'API.zip'
+    destinationFolder: 'API'
+
+# Ejecutar API
+- task: PowerShell@2
+  displayName: '[Test aceptación 6/8]: Ejecutar API'
+  inputs:
+    targetType: 'inline'
+    script: './API/API.exe'
+
+# Ejecutar Cliente
+- task: PowerShell@2
+  displayName: '[Test aceptación 7/8]: Ejecutar Cliente'
+  inputs:
+    targetType: 'inline'
+    script: |
+      cd Cliente
+      npm install http-server -g
+      http-server .\wwwroot\
+
+# Test unitarios
 - task: DotNetCoreCLI@2
-  displayName: '[Test aceptación X/X]: Ejecución y publicación de los test'
+  displayName: '[Test aceptación 8/8]: Ejecución y publicación de los test'
   inputs:
     command: 'test'
     projects: 'API.AcceptanceTests/API.AcceptanceTests.csproj'
