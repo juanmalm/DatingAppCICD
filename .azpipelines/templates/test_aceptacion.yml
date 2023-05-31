@@ -10,6 +10,12 @@ steps:
   artifact: 'API'
 
 # Test unitarios
+- task: UseDotNet@2
+  displayName: '[Test aceptación X/X]: Instalar SDK .NET'
+  inputs:
+    packageType: 'sdk'
+    version: '7.0.100'
+
 - task: DotNetCoreCLI@2
   displayName: '[Test aceptación X/X]: Ejecución y publicación de los test'
   inputs:
