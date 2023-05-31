@@ -20,20 +20,20 @@ steps:
   displayName: '[Test aceptación 4/8]: Desempaquetar artefacto Cliente'
   inputs:
     archiveFilePatterns: 'cliente.zip'
-    destinationFolder: 'Cliente'
+    destinationFolder: '$(Pipeline.Workspace)/Cliente'
 
 - task: ExtractFiles@1
   displayName: '[Test aceptación 5/8]: Desempaquetar artefacto API'
   inputs:
     archiveFilePatterns: 'API.zip'
-    destinationFolder: 'API'
+    destinationFolder: '$(Pipeline.Workspace)/API'
 
 # Ejecutar API
 - task: PowerShell@2
   displayName: '[Test aceptación 6/8]: Ejecutar API'
   inputs:
     targetType: 'inline'
-    script: './API/API.exe'
+    script: '$(Pipeline.Workspace)/API/API.exe'
 
 # Ejecutar Cliente
 - task: PowerShell@2
@@ -41,7 +41,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      cd Cliente
+      cd $(Pipeline.Workspace)/Cliente
       npm install http-server -g
       http-server .\wwwroot\
 
