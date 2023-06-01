@@ -10,13 +10,13 @@ steps:
 - task: DownloadPipelineArtifact@2
   displayName: '[Test aceptación 2/8]: Descarga artefacto Cliente'
   inputs:
-    downloadPath: '$(Pipeline.Workspace)'
+    downloadPath: '$(Build.BinariesDirectory)'
     artifact: 'Cliente'
 
 - task: DownloadPipelineArtifact@2
   displayName: '[Test aceptación 3/8]: Descarga artefacto API'
   inputs:
-    downloadPath: '$(Pipeline.Workspace)'
+    downloadPath: '$(Build.BinariesDirectory)'
     artifact: 'API'
 
 # Desempaquetar artefactos
@@ -24,20 +24,20 @@ steps:
   displayName: '[Test aceptación 4/8]: Desempaquetar artefacto Cliente'
   inputs:
     archiveFilePatterns: 'cliente.zip'
-    destinationFolder: '$(Pipeline.Workspace)/Cliente'
+    destinationFolder: '$(Build.BinariesDirectory)/Cliente'
 
 - task: ExtractFiles@1
   displayName: '[Test aceptación 5/8]: Desempaquetar artefacto API'
   inputs:
     archiveFilePatterns: 'API.zip'
-    destinationFolder: '$(Pipeline.Workspace)/API'
+    destinationFolder: '$(Build.BinariesDirectory)/API'
 
 # Ejecutar API
 - task: PowerShell@2
   displayName: '[Test aceptación 6/8]: Ejecutar API'
   inputs:
     targetType: 'inline'
-    script: '$(Pipeline.Workspace)/API/API.exe'
+    script: '$(Build.BinariesDirectory)/API/API.exe'
 
 # Ejecutar Cliente
 - task: PowerShell@2
@@ -45,7 +45,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      cd $(Pipeline.Workspace)/Cliente
+      cd $(Build.BinariesDirectory)/Cliente
       npm install http-server -g
       http-server .\wwwroot\
 
