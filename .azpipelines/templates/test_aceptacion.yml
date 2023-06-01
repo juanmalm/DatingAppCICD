@@ -37,7 +37,7 @@ steps:
   displayName: '[Test aceptación 6/8]: Ejecutar API'
   inputs:
     targetType: 'inline'
-    script: '$(Build.BinariesDirectory)/API/API.exe'
+    script: '$(Build.BinariesDirectory)/API/API.exe &'
 
 # Ejecutar Cliente
 - task: PowerShell@2
@@ -47,7 +47,7 @@ steps:
     script: |
       cd $(Build.BinariesDirectory)/Cliente
       npm install http-server -g
-      http-server .\wwwroot\
+      http-server .\wwwroot\ &
 
 # Test unitarios
 - task: DotNetCoreCLI@2
