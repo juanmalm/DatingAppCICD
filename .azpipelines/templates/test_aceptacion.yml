@@ -20,17 +20,17 @@ steps:
     artifact: 'API'
 
 # Desempaquetar artefactos
-- task: ExtractFiles@1
+- task: PowerShell@2
   displayName: '[Test aceptación 4/8]: Desempaquetar artefacto Cliente'
   inputs:
-    archiveFilePatterns: 'cliente.zip'
-    destinationFolder: '$(Build.BinariesDirectory)/Cliente'
+    targetType: 'inline'
+    script: 'Expand-Archive $(Build.BinariesDirectory)/cliente.zip -DestinationPath $(Build.BinariesDirectory)/Cliente'
 
-- task: ExtractFiles@1
+- task: PowerShell@2
   displayName: '[Test aceptación 5/8]: Desempaquetar artefacto API'
   inputs:
-    archiveFilePatterns: 'API.zip'
-    destinationFolder: '$(Build.BinariesDirectory)/API'
+    targetType: 'inline'
+    script: 'Expand-Archive $(Build.BinariesDirectory)/API.zip -DestinationPath $(Build.BinariesDirectory)/API'
 
 # Ejecutar API
 - task: PowerShell@2
