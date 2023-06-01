@@ -7,15 +7,17 @@ steps:
     version: '7.0.100'
 
 # Descarga de artefactos
-- download: current
+- task: DownloadPipelineArtifact@2
   displayName: '[Test aceptación 2/8]: Descarga artefacto Cliente'
-  downloadPath: '$(Pipeline.Workspace)'
-  artifact: 'Cliente'
+  inputs:
+    downloadPath: '$(Pipeline.Workspace)'
+    artifact: 'Cliente'
 
-- download: current
+- task: DownloadPipelineArtifact@2
   displayName: '[Test aceptación 3/8]: Descarga artefacto API'
-  downloadPath: '$(Pipeline.Workspace)'
-  artifact: 'API'
+  inputs:
+    downloadPath: '$(Pipeline.Workspace)'
+    artifact: 'API'
 
 # Desempaquetar artefactos
 - task: ExtractFiles@1
