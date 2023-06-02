@@ -32,5 +32,7 @@ stages:
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
   jobs:
   - job: Etapa_Test_Aceptacion
+    pool:
+      vmImage: "ubuntu-latest"
     steps:
     - template: templates/test_aceptacion.yml
