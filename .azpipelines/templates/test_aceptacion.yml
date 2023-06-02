@@ -50,7 +50,7 @@ steps:
       $job = Start-Job -ScriptBlock { http-server .\wwwroot\ }
       Start-Sleep -Seconds 10
       $job | Receive-Job
-      Invoke-WebRequest -URI http://localhost:8080
+      Invoke-WebRequest -URI https://www.marca.com/
 
 # Smoke test
 - task: PowerShell@2
