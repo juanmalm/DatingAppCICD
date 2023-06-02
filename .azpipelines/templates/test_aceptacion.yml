@@ -47,7 +47,9 @@ steps:
     script: |
       cd $(Build.BinariesDirectory)/Cliente
       npm install http-server -g
-      Start-Job -ScriptBlock { http-server .\wwwroot\ }
+      $job = Start-Job -ScriptBlock { http-server .\wwwroot\ }
+      Start-Sleep -Seconds 10
+      $job | Receive-Job
 
 # Smoke test
 - task: PowerShell@2
