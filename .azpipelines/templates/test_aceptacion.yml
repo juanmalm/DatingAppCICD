@@ -49,9 +49,16 @@ steps:
       npm install http-server -g
       Start-Job -ScriptBlock { http-server .\wwwroot\ }
 
+# Smoke test
+- task: PowerShell@2
+  displayName: '[Test aceptación 8/9]: Smoke test'
+  inputs:
+    targetType: 'inline'
+    script: 'Invoke-WebRequest -URI http://127.0.0.1:8080'
+
 # Test unitarios
 - task: DotNetCoreCLI@2
-  displayName: '[Test aceptación 8/8]: Ejecución y publicación de los test'
+  displayName: '[Test aceptación 9/9]: Ejecución y publicación de los test'
   inputs:
     command: 'test'
     projects: 'API.AcceptanceTests/API.AcceptanceTests.csproj'
