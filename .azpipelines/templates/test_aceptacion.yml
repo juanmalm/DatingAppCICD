@@ -48,9 +48,6 @@ steps:
       cd $(Build.BinariesDirectory)/Cliente
       npm install http-server -g
       $job = Start-Job -ScriptBlock { http-server .\wwwroot\ }
-      Start-Sleep -Seconds 10
-      $job | Receive-Job
-      Invoke-WebRequest -URI https://www.marca.com/
 
 # Smoke test
 - task: PowerShell@2
