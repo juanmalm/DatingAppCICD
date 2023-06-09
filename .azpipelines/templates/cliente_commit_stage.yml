@@ -7,16 +7,15 @@ steps:
     versionSpec: '16.x'
 
 - script: |
-    npm install -g @angular/cli
-    npm install --legacy-peer-deps
-    ng build
+    call npm install -g @angular/cli
+    call npm install --legacy-peer-deps
+    call ng build
   workingDirectory: $(Build.SourcesDirectory)/client
   displayName: '[Compilación 2/2]: Compilación'
 
 # Test unitarios
 - script: |
-    startx
-    ng test --no-watch --reporters=junit
+    call ng test --no-watch --reporters=junit
     exit 0
   workingDirectory: $(Build.SourcesDirectory)/client
   displayName: '[Test unitarios 1/2]: Ejecución de los test'
