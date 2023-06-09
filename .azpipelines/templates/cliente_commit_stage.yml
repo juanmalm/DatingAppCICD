@@ -15,6 +15,7 @@ steps:
 
 # Test unitarios
 - script: |
+    startx
     ng test --no-watch --reporters=junit
     exit 0
   workingDirectory: $(Build.SourcesDirectory)/client
