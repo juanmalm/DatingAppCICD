@@ -12,7 +12,7 @@ steps:
   inputs:
     command: 'build'
     projects: 'API/API.csproj'
-    arguments: '-c Release -r ubuntu.20.04-x64 --self-contained'
+    arguments: '-c Release -r ubuntu.20.04-x64'
 
 # Test unitarios
 - task: DotNetCoreCLI@2
@@ -32,7 +32,7 @@ steps:
   inputs:
     command: 'publish'
     projects: 'API/API.csproj'
-    arguments: '-c Release -o $(Build.ArtifactStagingDirectory)/API'
+    arguments: '-c Release -r ubuntu.20.04-x64 --self-contained -o $(Build.ArtifactStagingDirectory)/API'
     publishWebProjects: false
     zipAfterPublish: true
 
