@@ -12,7 +12,7 @@ steps:
   inputs:
     command: 'build'
     projects: 'API/API.csproj'
-    arguments: '-c Release -r ubuntu.20.04-x64'
+    arguments: '-c Release -r ubuntu.20.04-x64 --no-self-contained'
 
 # Test unitarios
 - task: DotNetCoreCLI@2
