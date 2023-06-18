@@ -32,22 +32,15 @@ steps:
     targetType: 'inline'
     script: 'Expand-Archive $(Build.BinariesDirectory)/API.zip -DestinationPath $(Build.BinariesDirectory)/API'
 
-# Ejecutar API
-- task: PowerShell@2
-  displayName: '[Test aceptación 6/8]: Ejecutar API'
+# Desplegar entorno test
+- task: PackerBuild@1
   inputs:
-    targetType: 'inline'
-    script: 'Start-Job -ScriptBlock { $(Build.BinariesDirectory)/API/API.exe }'
-
-# Ejecutar Cliente
-- task: PowerShell@2
-  displayName: '[Test aceptación 7/8]: Ejecutar Cliente'
-  inputs:
-    targetType: 'inline'
-    script: |
-      cd $(Build.BinariesDirectory)/Cliente
-      npm install http-server -g
-      $job = Start-Job -ScriptBlock { http-server .\wwwroot\ }
+    templateType: 'custom'
+    customTemplateLocation: 'packer/despliegue.json'
+    #customTemplateParameters: '{}' # string. Optional. Use when templateType = custom. Template parameters. Default: {}.
+  # Output
+    #imageUri: # string. Image URL or Name.
+    #imageId: # string. Azure Resource Id.
 
 # Smoke test
 - task: PowerShell@2
