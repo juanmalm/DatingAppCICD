@@ -36,7 +36,7 @@ steps:
 - task: PackerBuild@1
   inputs:
     templateType: 'custom'
-    customTemplateLocation: 'packer/despliegue.json'
+    customTemplateLocation: '.azpipelines/packer/despliegue.json'
     #customTemplateParameters: '{}' # string. Optional. Use when templateType = custom. Template parameters. Default: {}.
   # Output
     #imageUri: # string. Image URL or Name.
