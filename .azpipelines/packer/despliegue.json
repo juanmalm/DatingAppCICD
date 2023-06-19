@@ -19,13 +19,13 @@
     }],
     "provisioners": [{
         "type": "file",
-        "source": "./upload/",
+        "source": ".azpipelines/packer/upload/",
         "destination": "/tmp"
     }, {
         "type": "shell",
         "scripts": [
-            "./scripts/install-dependencies.sh",
-            "./scripts/install-app.sh"
+            ".azpipelines/packer/scripts/install-dependencies.sh",
+            ".azpipelines/packer/scripts/install-app.sh"
         ]
     }]
 }
