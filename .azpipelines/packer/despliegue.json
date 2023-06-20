@@ -1,14 +1,21 @@
 {
-    "variables": {},
+    "variables": {
+        "SubscriptionId": "",
+        "TenantId": "",
+        "ClientId": "",
+        "ClientSecret": "",
+        "ImageName": "",
+        "ResourceGroupName": ""
+    },
     "builders": [{
         "type": "azure-arm",
-        "subscription_id": "e1cbb5fb-3c9e-46ef-b7e0-a89cbc553e39",
-        "tenant_id": "4b3f0d87-67f2-4ee0-96a0-b41e492a126a",
-        "client_id": "fda239ee-110b-4199-ba51-f8f3319b2502",
-        "client_secret": "gC48Q~jYKrr~X-oenlC3gehL7q6MQmIJVB8Ryc3K",
+        "subscription_id": "{{user `SubscriptionId`}}",
+        "tenant_id": "{{user `TenantId`}}",
+        "client_id": "{{user `ClientId`}}",
+        "client_secret": "{{user `ClientSecret`}}",
 
-        "managed_image_name": "despliegue_tfm_{{timestamp}}",
-        "managed_image_resource_group_name": "herramientas_devops",
+        "managed_image_name": "{{user `ImageName`}}",
+        "managed_image_resource_group_name": "{{user `ResourceGroupName`}}",
         "os_type": "Linux",
         "image_publisher": "Canonical",
         "image_offer": "0001-com-ubuntu-server-focal",

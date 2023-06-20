@@ -37,7 +37,13 @@ steps:
   inputs:
     templateType: 'custom'
     customTemplateLocation: '.azpipelines/packer/despliegue.json'
-    #customTemplateParameters: '{}' # string. Optional. Use when templateType = custom. Template parameters. Default: {}.
+    customTemplateParameters: '{
+      "SubscriptionId": "$(SubscriptionId)",
+      "TenantId": "$(TenantId)",
+      "ClientId": "$(ClientId)",
+      "ClientSecret": "$(ClientSecret)",
+      "ImageName": "DatingApp_$(Build.BuildNumber)",
+      "ResourceGroupName": "$(ResourceGroupName)"}'
   # Output
     #imageUri: # string. Image URL or Name.
     #imageId: # string. Azure Resource Id.
