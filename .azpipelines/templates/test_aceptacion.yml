@@ -57,7 +57,7 @@ steps:
     command: 'init'
     workingDirectory: '.azpipelines/terraform'
 
-- task: TerraformCLI
+- task: TerraformCLI@0
   displayName: 'terraform apply'
   inputs:
     command: 'apply'
