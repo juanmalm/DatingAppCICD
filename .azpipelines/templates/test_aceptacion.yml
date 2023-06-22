@@ -51,6 +51,19 @@ steps:
   inputs:
     terraformVersion: 1.5.1
 
+- task: TerraformCLI@0
+  displayName: 'Run terraform init'
+  inputs:
+    command: 'init'
+    workingDirectory: '.azpipelines/terraform'
+
+- task: TerraformCLI
+  displayName: 'terraform apply'
+  inputs:
+    command: 'apply'
+    environmentServiceName: 'Azure TFM'
+    providerAzureRmSubscriptionId: '$(SubscriptionId)'
+
 # Smoke test
 - task: PowerShell@2
   displayName: '[Test aceptación 8/9]: Smoke test'
