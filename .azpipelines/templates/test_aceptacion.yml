@@ -34,6 +34,7 @@ steps:
 
 # Desplegar entorno test
 - task: PackerBuild@1
+  displayName: '[Test aceptación 6/9]: Crear imagen con Packer'
   inputs:
     templateType: 'custom'
     customTemplateLocation: '.azpipelines/packer/despliegue.json'
@@ -44,9 +45,11 @@ steps:
       "ClientSecret": "$(ClientSecret)",
       "ImageName": "DatingApp_$(Build.BuildNumber)",
       "ResourceGroupName": "$(ResourceGroupName)"}'
-  # Output
-    #imageUri: # string. Image URL or Name.
-    #imageId: # string. Azure Resource Id.
+
+- task: TerraformInstaller@0
+  displayName: 'Install Terraform'
+  inputs:
+    terraformVersion: 3.0.0
 
 # Smoke test
 - task: PowerShell@2
