@@ -55,7 +55,7 @@ steps:
   displayName: 'Run terraform init'
   inputs:
     command: 'init'
-    workingDirectory: '.azpipelines/terraform'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'
 
 - task: TerraformCLI@0
   displayName: 'terraform apply'
@@ -63,6 +63,7 @@ steps:
     command: 'apply'
     environmentServiceName: 'Azure TFM'
     providerAzureRmSubscriptionId: '$(SubscriptionId)'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'
 
 # Smoke test
 - task: PowerShell@2
