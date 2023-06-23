@@ -64,6 +64,7 @@ steps:
     environmentServiceName: 'Azure TFM'
     providerAzureRmSubscriptionId: '$(SubscriptionId)'
     workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'
+    commandOptions: '-var="image_id=/subscriptions/$(SubscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Compute/images/DatingApp_$(Build.BuildNumber)"'
 
 # Smoke test
 - task: PowerShell@2

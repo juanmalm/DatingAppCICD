@@ -1,3 +1,7 @@
+variable "image_id" {
+  type = string
+}
+
 terraform {
   required_providers {
     azurerm = {
@@ -90,7 +94,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   location                        = "West Europe"
   size                            = "Standard_B1ls"
   admin_username                  = "adminuser"
-  source_image_id                 = "/subscriptions/e1cbb5fb-3c9e-46ef-b7e0-a89cbc553e39/resourceGroups/herramientas_devops/providers/Microsoft.Compute/images/despliegue_tfm_1687042124"
+  source_image_id                 = var.image_id
   network_interface_ids = [
     azurerm_network_interface.main.id,
   ]
