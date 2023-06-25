@@ -3,7 +3,7 @@ Description=TFM DatingApp
 After=network.target
 
 [Service]
-ExecStart=/app/start-app.sh
+ExecStart=/bin/bash /app/start-app.sh
 
 [Install]
 WantedBy=multi-user.target
