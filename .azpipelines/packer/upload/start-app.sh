@@ -1,8 +1,4 @@
-#!/usr/bin/env bash
-
-# Start API
+#!/bin/bash
 cd /app
 ./API/API &
-
-# Start Angular client
 sudo http-server wwwroot/ -p 8080
