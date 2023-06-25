@@ -3,7 +3,7 @@ sudo apt-get install -y unzip
 sudo mkdir /app
 
 sudo unzip /tmp/API.zip -d /app/API
-sudo unzip /tmp/cliente.zip -d /app
+sudo unzip /tmp/cliente.zip -d /app/cliente
 
 sudo chmod 777 /app/API/API
 
