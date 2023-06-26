@@ -6,62 +6,7 @@ steps:
     packageType: 'sdk'
     version: '7.0.100'
 
-# Descarga de artefactos
-- task: DownloadPipelineArtifact@2
-  displayName: '[Test aceptación 2/8]: Descarga artefacto Cliente'
-  inputs:
-    downloadPath: '$(Build.BinariesDirectory)'
-    artifact: 'Cliente'
-
-- task: DownloadPipelineArtifact@2
-  displayName: '[Test aceptación 3/8]: Descarga artefacto API'
-  inputs:
-    downloadPath: '$(Build.BinariesDirectory)'
-    artifact: 'API'
-
-# Desempaquetar artefactos
-- task: PowerShell@2
-  displayName: '[Test aceptación 4/8]: Desempaquetar artefacto Cliente'
-  inputs:
-    targetType: 'inline'
-    script: 'Expand-Archive $(Build.BinariesDirectory)/cliente.zip -DestinationPath $(Build.BinariesDirectory)/Cliente'
-
-- task: PowerShell@2
-  displayName: '[Test aceptación 5/8]: Desempaquetar artefacto API'
-  inputs:
-    targetType: 'inline'
-    script: 'Expand-Archive $(Build.BinariesDirectory)/API.zip -DestinationPath $(Build.BinariesDirectory)/API'
-
 # Desplegar entorno test
-- task: PowerShell@2
-  displayName: '[Test aceptación 6/9]: Crear imagen con Packer'
-  inputs:
-    targetType: 'inline'
-    script: |
-      Invoke-WebRequest -Uri https://releases.hashicorp.com/packer/1.9.1/packer_1.9.1_windows_amd64.zip -OutFile .azpipelines\packer\packer_1.9.1_windows_amd64.zip
-      Expand-Archive .azpipelines\packer\packer_1.9.1_windows_amd64.zip -DestinationPath .azpipelines\packer\
-      .\.azpipelines\packer\packer.exe build -force `
-          -var "SubscriptionId=$(SubscriptionId)" `
-          -var "TenantId=$(TenantId)" `
-          -var "ClientId=$(ClientId)" `
-          -var "ClientSecret=$(ClientSecret)" `
-          -var "ImageName=DatingApp_$(Build.BuildNumber)" `
-          -var "ResourceGroupName=$(ResourceGroupName)" `
-          .azpipelines\packer\despliegue.json
-
-#- task: PackerBuild@1
-#  displayName: '[Test aceptación 6/9]: Crear imagen con Packer'
-#  inputs:
-#    templateType: 'custom'
-#    customTemplateLocation: '.azpipelines/packer/despliegue.json'
-#    customTemplateParameters: '{
-#      "SubscriptionId": "$(SubscriptionId)",
-#      "TenantId": "$(TenantId)",
-#      "ClientId": "$(ClientId)",
-#      "ClientSecret": "$(ClientSecret)",
-#      "ImageName": "DatingApp_$(Build.BuildNumber)",
-#      "ResourceGroupName": "$(ResourceGroupName)"}'
-
 - task: TerraformInstaller@0
   displayName: 'Install Terraform'
   inputs:

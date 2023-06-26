@@ -19,18 +19,19 @@ stages:
 
   # Job para el cliente en Angular
   - job: Cliente_Angular
-    condition: eq(1,2)
     steps:
     - template: templates/cliente_commit_stage.yml
 
   # Job para el API en .NET
   - job: API_NET
-    condition: eq(1,2)
     steps:
     - template: templates/api_commit_stage.yml
 
   # Job para el empaquetado
   - job: Empaquetado
+    dependsOn:
+    - Cliente_Angular
+    - API_NET
     pool:
       vmImage: 'ubuntu-20.04'
     steps:
@@ -38,7 +39,7 @@ stages:
 
 # Etapa de test de aceptación automáticos
 - stage: Etapa_Test_Aceptacion
-  condition: and(succeeded(), eq(1,2), eq(variables['build.sourceBranch'], 'refs/heads/main'))
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
   jobs:
   - job: Etapa_Test_Aceptacion
     steps:
