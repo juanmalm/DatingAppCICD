@@ -19,16 +19,26 @@ stages:
 
   # Job para el cliente en Angular
   - job: Cliente_Angular
+    enabled: false
     steps:
     - template: templates/cliente_commit_stage.yml
 
   # Job para el API en .NET
   - job: API_NET
+    enabled: false
     steps:
     - template: templates/api_commit_stage.yml
 
+  # Job para el empaquetado
+  - job: API_NET
+    pool:
+      vmImage: 'ubuntu-20.04'
+    steps:
+    - template: templates/empaquetado.yml
+
 # Etapa de test de aceptación automáticos
 - stage: Etapa_Test_Aceptacion
+  enabled: false
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
   jobs:
   - job: Etapa_Test_Aceptacion
