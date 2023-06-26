@@ -30,7 +30,7 @@ stages:
     - template: templates/api_commit_stage.yml
 
   # Job para el empaquetado
-  - job: API_NET
+  - job: Empaquetado
     pool:
       vmImage: 'ubuntu-20.04'
     steps:
