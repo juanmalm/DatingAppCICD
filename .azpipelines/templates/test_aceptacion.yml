@@ -27,12 +27,18 @@ steps:
     workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'
     commandOptions: '-var="image_id=/subscriptions/$(SubscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Compute/images/DatingApp_$(Build.BuildNumber)"'
 
+- task: TerraformCLI@0
+  displayName: 'terraform output'
+  inputs:
+    command: output
+    workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'
+
 # Smoke test
 - task: PowerShell@2
   displayName: '[Test aceptación 8/9]: Smoke test'
   inputs:
     targetType: 'inline'
-    script: 'Invoke-WebRequest -URI http://127.0.0.1:8080'
+    script: 'Invoke-WebRequest -URI http://$(TF_OUT_VM_IP):8080'
 
 # Test unitarios
 - task: DotNetCoreCLI@2
@@ -40,3 +46,11 @@ steps:
   inputs:
     command: 'test'
     projects: 'API.AcceptanceTests/API.AcceptanceTests.csproj'
+
+- task: TerraformCLI@0
+  displayName: 'terraform destroy'
+  inputs:
+    command: 'destroy'
+    environmentServiceName: 'Azure TFM'
+    providerAzureRmSubscriptionId: '$(SubscriptionId)'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'
