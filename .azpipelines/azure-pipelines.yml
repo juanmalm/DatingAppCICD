@@ -38,7 +38,6 @@ stages:
 
 # Etapa de test de aceptación automáticos
 - stage: Etapa_Test_Aceptacion
-  enabled: false
   condition: and(succeeded(), eq(1,2), eq(variables['build.sourceBranch'], 'refs/heads/main'))
   jobs:
   - job: Etapa_Test_Aceptacion
