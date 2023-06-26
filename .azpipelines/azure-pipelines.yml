@@ -19,13 +19,13 @@ stages:
 
   # Job para el cliente en Angular
   - job: Cliente_Angular
-    enabled: false
+    condition: eq(1,2)
     steps:
     - template: templates/cliente_commit_stage.yml
 
   # Job para el API en .NET
   - job: API_NET
-    enabled: false
+    condition: eq(1,2)
     steps:
     - template: templates/api_commit_stage.yml
 
@@ -39,7 +39,7 @@ stages:
 # Etapa de test de aceptación automáticos
 - stage: Etapa_Test_Aceptacion
   enabled: false
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
+  condition: and(succeeded(), eq(1,2), eq(variables['build.sourceBranch'], 'refs/heads/main'))
   jobs:
   - job: Etapa_Test_Aceptacion
     steps:
