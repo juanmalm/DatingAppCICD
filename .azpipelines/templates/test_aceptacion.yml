@@ -28,7 +28,7 @@ steps:
     commandOptions: '
       -var image_id="/subscriptions/$(SubscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Compute/images/DatingApp_$(Build.BuildNumber)"
       -var resource_group="$(ResourceGroupName)"
-      -var vm_name="test_$(Build.BuildNumber)"
+      -var vm_name="test-$(Build.BuildNumber)"
       -var entorno="test"'
 
 - task: TerraformCLI@0
@@ -61,4 +61,8 @@ steps:
     environmentServiceName: 'Azure TFM'
     providerAzureRmSubscriptionId: '$(SubscriptionId)'
     workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'
-    commandOptions: '-var="image_id=/subscriptions/$(SubscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Compute/images/DatingApp_$(Build.BuildNumber)"'
+    commandOptions: '
+      -var image_id="/subscriptions/$(SubscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Compute/images/DatingApp_$(Build.BuildNumber)"
+      -var resource_group="$(ResourceGroupName)"
+      -var vm_name="test-$(Build.BuildNumber)"
+      -var entorno="test"'
