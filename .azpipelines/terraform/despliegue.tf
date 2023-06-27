@@ -2,6 +2,23 @@ variable "image_id" {
   type = string
 }
 
+variable "resource_group" {
+  type = string
+}
+
+variable "vm_name" {
+  type = string
+}
+
+variable "entorno" {
+  type = string
+
+  validation {
+    condition     = var.entorno == "test" || var.entorno == "prod"
+    error_message = "La variable entorno acepta uno de estos valores: \"test\" o \"prod\"."
+  }
+}
+
 terraform {
   required_providers {
     azurerm = {
@@ -16,33 +33,33 @@ provider "azurerm" {
 }
 
 resource "azurerm_virtual_network" "main" {
-  name                = "test-network"
+  name                = "${var.entorno}-network"
   address_space       = ["10.0.0.0/16"]
   location            = "West Europe"
-  resource_group_name = "herramientas_devops"
+  resource_group_name = var.resource_group
 }
 
 resource "azurerm_subnet" "internal" {
-  name                 = "internal"
-  resource_group_name  = "herramientas_devops"
+  name                 = "${var.entorno}-internal"
+  resource_group_name  = var.resource_group
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = ["10.0.2.0/24"]
 }
 
 resource "azurerm_public_ip" "public_ip" {
-  name                = "vm_public_ip"
-  resource_group_name = "herramientas_devops"
+  name                = "${var.entorno}-vm_public_ip"
+  resource_group_name = var.resource_group
   location            = "West Europe"
   allocation_method   = "Static"
 }
 
 resource "azurerm_network_interface" "main" {
-  name                = "test-nic"
-  resource_group_name = "herramientas_devops"
+  name                = "${var.entorno}-nic"
+  resource_group_name = var.resource_group
   location            = "West Europe"
 
   ip_configuration {
-    name                          = "internal"
+    name                          = "${var.entorno}-internal"
     subnet_id                     = azurerm_subnet.internal.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id = azurerm_public_ip.public_ip.id
@@ -52,7 +69,7 @@ resource "azurerm_network_interface" "main" {
 resource "azurerm_network_security_group" "nsg" {
   name                = "http_nsg"
   location            = "West Europe"
-  resource_group_name = "herramientas_devops"
+  resource_group_name = var.resource_group
 
   security_rule {
     name                       = "allow_ssh_sg"
@@ -89,8 +106,8 @@ output "vm_ip" {
 }
 
 resource "azurerm_linux_virtual_machine" "main" {
-  name                            = "test"
-  resource_group_name             = "herramientas_devops"
+  name                            = var.vm_name
+  resource_group_name             = var.resource_group
   location                        = "West Europe"
   size                            = "Standard_B1ls"
   admin_username                  = "adminuser"
