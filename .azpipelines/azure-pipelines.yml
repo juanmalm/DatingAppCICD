@@ -44,3 +44,18 @@ stages:
   - job: Etapa_Test_Aceptacion
     steps:
     - template: templates/test_aceptacion.yml
+
+# Despliegue
+- stage: Etapa_Despliegue
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
+  jobs:
+  - deployment: Etapa_Despliegue
+    environment: 'produccion'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - template: templates/despliegue.yml
+            parameters:
+              entorno: prod
