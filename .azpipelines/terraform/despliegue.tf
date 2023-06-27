@@ -14,7 +14,7 @@ variable "entorno" {
   type = string
 
   validation {
-    condition     = var.entorno == "test" || var.entorno == "prod"
+    condition     = can(regex("^test$|^prod$", var.entorno))
     error_message = "La variable entorno acepta uno de estos valores: \"test\" o \"prod\"."
   }
 }
