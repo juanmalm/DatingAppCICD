@@ -1,0 +1,35 @@
+parameters:
+- name: entorno
+  type: string
+
+steps:
+
+- task: TerraformInstaller@0
+  displayName: '[Despliegue entorno ${{ parameters.entorno }} 1/4]: Instalar Terraform'
+  inputs:
+    terraformVersion: 1.5.1
+
+- task: TerraformCLI@0
+  displayName: '[Despliegue entorno ${{ parameters.entorno }} 2/4]: Terraform init'
+  inputs:
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'
+
+- task: TerraformCLI@0
+  displayName: '[Despliegue entorno ${{ parameters.entorno }} 3/4]: Terraform apply'
+  inputs:
+    command: 'apply'
+    environmentServiceName: 'Azure TFM'
+    providerAzureRmSubscriptionId: '$(SubscriptionId)'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'
+    commandOptions: '
+      -var image_id="/subscriptions/$(SubscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Compute/images/DatingApp_$(Build.BuildNumber)"
+      -var resource_group="$(ResourceGroupName)"
+      -var vm_name="test-$(Build.BuildNumber)"
+      -var entorno="${{ parameters.entorno }}"'
+
+- task: TerraformCLI@0
+  displayName: '[Despliegue entorno ${{ parameters.entorno }} 4/4]: Terraform output'
+  inputs:
+    command: output
+    workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'

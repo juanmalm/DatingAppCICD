@@ -1,52 +1,26 @@
 steps:
 
 - task: UseDotNet@2
-  displayName: '[Test aceptación 1/8]: Instalar SDK .NET'
+  displayName: '[Test aceptación 1/4]: Instalar SDK .NET'
   inputs:
     packageType: 'sdk'
     version: '7.0.100'
 
 # Desplegar entorno test
-- task: TerraformInstaller@0
-  displayName: 'Install Terraform'
-  inputs:
-    terraformVersion: 1.5.1
-
-- task: TerraformCLI@0
-  displayName: 'Run terraform init'
-  inputs:
-    command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'
-
-- task: TerraformCLI@0
-  displayName: 'terraform apply'
-  inputs:
-    command: 'apply'
-    environmentServiceName: 'Azure TFM'
-    providerAzureRmSubscriptionId: '$(SubscriptionId)'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'
-    commandOptions: '
-      -var image_id="/subscriptions/$(SubscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Compute/images/DatingApp_$(Build.BuildNumber)"
-      -var resource_group="$(ResourceGroupName)"
-      -var vm_name="test-$(Build.BuildNumber)"
-      -var entorno="test"'
-
-- task: TerraformCLI@0
-  displayName: 'terraform output'
-  inputs:
-    command: output
-    workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'
+- template: despliegue.yml
+  parameters:
+    entorno: test
 
 # Smoke test
 - task: PowerShell@2
-  displayName: '[Test aceptación 8/9]: Smoke test'
+  displayName: '[Test aceptación 2/4]: Smoke test'
   inputs:
     targetType: 'inline'
     script: 'Invoke-WebRequest -URI http://$(TF_OUT_VM_IP):8080'
 
 # Test unitarios
 - task: DotNetCoreCLI@2
-  displayName: '[Test aceptación 9/9]: Ejecución y publicación de los test'
+  displayName: '[Test aceptación 3/4]: Ejecución y publicación de los test'
   env:
     APP_IP: $(TF_OUT_VM_IP)
   inputs:
@@ -54,7 +28,7 @@ steps:
     projects: 'API.AcceptanceTests/API.AcceptanceTests.csproj'
 
 - task: TerraformCLI@0
-  displayName: 'terraform destroy'
+  displayName: '[Test aceptación 4/4]: Destrucción entorno de test'
   condition: always()
   inputs:
     command: 'destroy'
