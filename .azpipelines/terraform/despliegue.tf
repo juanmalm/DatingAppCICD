@@ -13,10 +13,10 @@ variable "vm_name" {
 variable "entorno" {
   type = string
 
-  validation {
-    condition     = can(regex("^test$|^prod$", var.entorno))
-    error_message = "La variable entorno acepta uno de estos valores: \"test\" o \"prod\"."
-  }
+  //validation {
+  //  condition     = can(regex("^test$|^prod$", var.entorno))
+  //  error_message = "La variable entorno acepta uno de estos valores: \"test\" o \"prod\"."
+  //}
 }
 
 terraform {
