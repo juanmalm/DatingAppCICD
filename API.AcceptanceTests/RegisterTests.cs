@@ -29,7 +29,8 @@ namespace API.AcceptanceTests
         [TestInitialize()]
         public void SetupTest()
         {
-            appURL = "http://127.0.0.1:8080/";
+            var appIp = Environment.GetEnvironmentVariable("APP_IP") ?? "127.0.0.1";
+            appURL = $"http://{appIp}:8080/";
             driver = new ChromeDriver();
         }
 

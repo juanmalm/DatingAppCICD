@@ -43,6 +43,8 @@ steps:
 # Test unitarios
 - task: DotNetCoreCLI@2
   displayName: '[Test aceptación 9/9]: Ejecución y publicación de los test'
+  env:
+    APP_IP: $(TF_OUT_VM_IP)
   inputs:
     command: 'test'
     projects: 'API.AcceptanceTests/API.AcceptanceTests.csproj'
