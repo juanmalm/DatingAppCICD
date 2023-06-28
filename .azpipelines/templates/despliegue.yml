@@ -17,10 +17,9 @@ steps:
     backendType: azurerm
     backendServiceArm: 'Azure TFM'
     backendAzureRmSubscriptionId: '$(SubscriptionId)'
-    ensureBackend: true
     backendAzureRmResourceGroupName: '$(ResourceGroupName)'
     backendAzureRmResourceGroupLocation: 'westeurope'
-    backendAzureRmStorageAccountName: 'terraformBackend'
+    backendAzureRmStorageAccountName: 'tfmterraformbackend'
     backendAzureRmContainerName: '${{ parameters.entorno }}-blob-container'
     backendAzureRmKey: '${{ parameters.entorno }}.tfstate'
 
