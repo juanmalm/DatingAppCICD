@@ -67,7 +67,7 @@ resource "azurerm_network_interface" "main" {
 }
 
 resource "azurerm_network_security_group" "nsg" {
-  name                = "http_nsg"
+  name                = "${var.entorno}-http_nsg"
   location            = "West Europe"
   resource_group_name = var.resource_group
 
