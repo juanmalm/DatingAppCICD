@@ -13,6 +13,19 @@ steps:
     downloadPath: '.azpipelines/packer/upload'
     artifact: 'API'
 
+- task: DownloadSecureFile@1
+  displayName: 'Descarga appsettings.json de produccion'
+  name: appsettings
+  inputs:
+    secureFile: 'appsettings.json'
+
+- task: PowerShell@2
+  displayName: 'Copia secure file en ruta final'
+  inputs:
+    targetType: 'inline'
+    script: |
+      cp $(appsettings.secureFilePath) .azpipelines/packer/upload/appsettings.json
+
 # Crear imagen con Packer
 - task: PackerBuild@1
   displayName: '[Empaquetado 3/3]: Crear imagen con Packer'

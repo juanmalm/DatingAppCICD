@@ -4,6 +4,7 @@ sudo mkdir /app
 
 sudo unzip /tmp/API.zip -d /app/API
 sudo unzip /tmp/cliente.zip -d /app/cliente
+sudo cp /tmp/appsettings.json /app
 
 sudo chmod 777 /app/API/API
 
@@ -16,3 +17,4 @@ sudo systemctl enable datingapp.service
 echo "y" | sudo ufw enable
 sudo ufw allow 22
 sudo ufw allow 8080
+sudo ufw allow 5000

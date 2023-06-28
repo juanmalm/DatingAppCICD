@@ -128,20 +128,20 @@ resource "azurerm_linux_virtual_machine" "main" {
     caching              = "ReadWrite"
   }
 
-  //provisioner "remote-exec" {
-  //  inline = [
-  //    "cd /app",
-  //    "./API/API &",
-  //    "http-server wwwroot/ -p 8080 &"
-  //  ]
-//
-  //  connection {
-  //    host = azurerm_public_ip.public_ip.ip_address
-  //    user = "adminuser"
-  //    type = "ssh"
-  //    private_key = "${file("~/.ssh/id_rsa")}"
-  //    timeout = "4m"
-  //    agent = false
-  //  }
-  //}
+  provisioner "remote-exec" {
+    inline = [
+      "cd /app",
+      "cp appsettings.json API/appsettings.json",
+      "sudo systemctl restart datingapp.service"
+    ]
+
+    connection {
+      host = azurerm_public_ip.public_ip.ip_address
+      user = "adminuser"
+      type = "ssh"
+      private_key = "${file("id_rsa")}"
+      timeout = "4m"
+      agent = false
+    }
+  }
 }
