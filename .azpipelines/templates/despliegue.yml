@@ -20,6 +20,9 @@ steps:
     ensureBackend: true
     backendAzureRmResourceGroupName: '$(ResourceGroupName)'
     backendAzureRmResourceGroupLocation: 'westeurope'
+    backendAzureRmStorageAccountName: 'terraform-backend-storage-account'
+    backendAzureRmContainerName: '${{ parameters.entorno }}-blob-container'
+    backendAzureRmKey: '${{ parameters.entorno }}.tfstate'
 
 - task: TerraformCLI@0
   displayName: '[Despliegue entorno ${{ parameters.entorno }} 3/4]: Terraform apply'
