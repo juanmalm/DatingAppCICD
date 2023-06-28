@@ -130,9 +130,11 @@ resource "azurerm_linux_virtual_machine" "main" {
 
   provisioner "remote-exec" {
     inline = [
-      "[[ ${var.entorno} != \"prod\" ]] || { exit 1; }",
+      "[[ ${var.entorno} != \"prod\" ]] || { exit 0; }",
       "cd /app",
       "cp appsettings.json API/appsettings.json",
+      "cd client\src\environments",
+      "sed -i 's/localhost/${azurerm_public_ip.public_ip.ip_address}/' environment.prod.ts",
       "sudo systemctl restart datingapp.service"
     ]
 
