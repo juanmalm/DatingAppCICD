@@ -14,6 +14,12 @@ steps:
   inputs:
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)/.azpipelines/terraform'
+    backendType: azurerm
+    backendServiceArm: 'Azure TFM'
+    backendAzureRmSubscriptionId: '$(SubscriptionId)'
+    ensureBackend: true
+    backendAzureRmResourceGroupName: '$(ResourceGroupName)'
+    backendAzureRmResourceGroupLocation: 'westeu'
 
 - task: TerraformCLI@0
   displayName: '[Despliegue entorno ${{ parameters.entorno }} 3/4]: Terraform apply'
