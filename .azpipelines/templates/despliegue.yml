@@ -19,7 +19,7 @@ steps:
     backendAzureRmSubscriptionId: '$(SubscriptionId)'
     ensureBackend: true
     backendAzureRmResourceGroupName: '$(ResourceGroupName)'
-    backendAzureRmResourceGroupLocation: 'westeu'
+    backendAzureRmResourceGroupLocation: 'westeurope'
 
 - task: TerraformCLI@0
   displayName: '[Despliegue entorno ${{ parameters.entorno }} 3/4]: Terraform apply'
