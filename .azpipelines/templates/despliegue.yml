@@ -6,14 +6,12 @@ steps:
 
 - task: DownloadSecureFile@1
   displayName: 'Descarga clave privada para SSH'
-  condition: eq('${{ parameters.entorno }}', 'prod')
   name: id_rsa
   inputs:
     secureFile: 'id_rsa'
 
 - task: PowerShell@2
   displayName: 'Copia secure file en ruta final'
-  condition: eq('${{ parameters.entorno }}', 'prod')
   inputs:
     targetType: 'inline'
     script: 'cp $(id_rsa.secureFilePath) $(System.DefaultWorkingDirectory)/.azpipelines/terraform'
