@@ -130,7 +130,7 @@ resource "azurerm_linux_virtual_machine" "main" {
 
   provisioner "remote-exec" {
     inline = [
-      "[[ ${var.entorno} != \"prod\" ]] || { exit 0; }",
+      "if [ ${var.entorno} != \"prod\" ]; then exit 0; fi",
       "cd /app",
       "cp appsettings.json API/appsettings.json",
       "cd client/src/environments",
