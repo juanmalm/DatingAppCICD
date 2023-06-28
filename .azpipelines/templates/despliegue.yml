@@ -20,7 +20,7 @@ steps:
     ensureBackend: true
     backendAzureRmResourceGroupName: '$(ResourceGroupName)'
     backendAzureRmResourceGroupLocation: 'westeurope'
-    backendAzureRmStorageAccountName: 'terraform-backend-storage-account'
+    backendAzureRmStorageAccountName: 'terraformBackend'
     backendAzureRmContainerName: '${{ parameters.entorno }}-blob-container'
     backendAzureRmKey: '${{ parameters.entorno }}.tfstate'
 
