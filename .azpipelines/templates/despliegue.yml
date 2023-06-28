@@ -25,7 +25,7 @@ steps:
     commandOptions: '
       -var image_id="/subscriptions/$(SubscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Compute/images/DatingApp_$(Build.BuildNumber)"
       -var resource_group="$(ResourceGroupName)"
-      -var vm_name="test-$(Build.BuildNumber)"
+      -var vm_name="${{ parameters.entorno }}-$(Build.BuildNumber)"
       -var entorno="${{ parameters.entorno }}"'
 
 - task: TerraformCLI@0
