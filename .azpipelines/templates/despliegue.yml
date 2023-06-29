@@ -4,18 +4,6 @@ parameters:
 
 steps:
 
-- task: DownloadSecureFile@1
-  displayName: 'Descarga clave privada para SSH'
-  name: id_rsa
-  inputs:
-    secureFile: 'id_rsa'
-
-- task: PowerShell@2
-  displayName: 'Copia secure file en ruta final'
-  inputs:
-    targetType: 'inline'
-    script: 'cp $(id_rsa.secureFilePath) $(System.DefaultWorkingDirectory)/.azpipelines/terraform'
-
 - task: TerraformInstaller@0
   displayName: '[Despliegue entorno ${{ parameters.entorno }} 1/4]: Instalar Terraform'
   inputs:

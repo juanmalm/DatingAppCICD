@@ -4,7 +4,7 @@ sudo mkdir /app
 
 sudo unzip /tmp/API.zip -d /app/API
 sudo unzip /tmp/cliente.zip -d /app/cliente
-sudo cp /tmp/appsettings.json /app
+sudo cp /tmp/appsettings.json /app/API/appsettings.json
 
 sudo chmod 777 /app/API/API
 
