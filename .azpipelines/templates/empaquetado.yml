@@ -2,25 +2,26 @@ steps:
 
 # Descarga de artefactos
 - task: DownloadPipelineArtifact@2
-  displayName: '[Empaquetado 1/3]: Descarga artefacto Cliente'
+  displayName: '[Empaquetado 1/5]: Descarga artefacto Cliente'
   inputs:
     downloadPath: '.azpipelines/packer/upload'
     artifact: 'Cliente'
 
 - task: DownloadPipelineArtifact@2
-  displayName: '[Empaquetado 2/3]: Descarga artefacto API'
+  displayName: '[Empaquetado 2/5]: Descarga artefacto API'
   inputs:
     downloadPath: '.azpipelines/packer/upload'
     artifact: 'API'
 
+# Descarga de archivo seguro de configuración para producción
 - task: DownloadSecureFile@1
-  displayName: 'Descarga appsettings.json de produccion'
+  displayName: '[Empaquetado 3/5]: Descarga appsettings.json de produccion'
   name: appsettings
   inputs:
     secureFile: 'appsettings.json'
 
 - task: PowerShell@2
-  displayName: 'Copia secure file en ruta final'
+  displayName: '[Empaquetado 4/5]: Copia secure file en ruta upload de Packer'
   inputs:
     targetType: 'inline'
     script: |
@@ -28,7 +29,7 @@ steps:
 
 # Crear imagen con Packer
 - task: PackerBuild@1
-  displayName: '[Empaquetado 3/3]: Crear imagen con Packer'
+  displayName: '[Empaquetado 5/5]: Crear imagen con Packer'
   inputs:
     templateType: 'custom'
     customTemplateLocation: '.azpipelines/packer/despliegue.json'
