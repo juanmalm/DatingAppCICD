@@ -32,7 +32,7 @@ steps:
   displayName: '[Empaquetado 5/5]: Crear imagen con Packer'
   inputs:
     templateType: 'custom'
-    customTemplateLocation: '.azpipelines/packer/despliegue.json'
+    customTemplateLocation: '.azpipelines/packer/empaquetado.json'
     customTemplateParameters: '{
       "SubscriptionId": "$(SubscriptionId)",
       "TenantId": "$(TenantId)",
