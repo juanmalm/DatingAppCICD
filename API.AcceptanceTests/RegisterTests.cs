@@ -34,7 +34,7 @@ namespace API.AcceptanceTests
 
             var options = new ChromeOptions();
             options.AddArgument("no-sandbox");
-            driver = new ChromeDriver(options);
+            driver = new ChromeDriver(ChromeDriverService.CreateDefaultService(), options, TimeSpan.FromMinutes(3));
         }
 
         [TestCleanup()]
