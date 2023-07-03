@@ -13,7 +13,6 @@
         "tenant_id": "{{user `TenantId`}}",
         "client_id": "{{user `ClientId`}}",
         "client_secret": "{{user `ClientSecret`}}",
-
         "managed_image_name": "{{user `ImageName`}}",
         "managed_image_resource_group_name": "{{user `ResourceGroupName`}}",
         "os_type": "Linux",
