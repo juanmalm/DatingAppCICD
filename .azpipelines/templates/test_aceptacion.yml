@@ -1,5 +1,6 @@
 steps:
 
+# Instalación SDK necesario para la ejecución del proyecto de los test de aceptación
 - task: UseDotNet@2
   displayName: '[Test aceptación 1/4]: Instalar SDK .NET'
   inputs:
@@ -18,7 +19,7 @@ steps:
     targetType: 'inline'
     script: 'Invoke-WebRequest -URI http://$(TF_OUT_VM_IP):8080'
 
-# Test unitarios
+# Test de aceptación
 - task: DotNetCoreCLI@2
   displayName: '[Test aceptación 3/4]: Ejecución y publicación de los test'
   env:
